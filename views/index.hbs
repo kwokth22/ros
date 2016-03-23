@@ -6,15 +6,16 @@
         </h1>
     </div>
 </div>
-
+<div class="row">
 <div id = "Hot Challenge">
     {{#each chall}}
+    
     <div class="col-md-4">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4><i class="fa fa-fw fa-compass"></i>{{this.Name}}</h4>
             </div>
-            <div class="panel-body" style="max-height: 10;">
+            <div class="panel-body" style="min-height: 10;">
                 
                 <p><img src="{{this.ImageSrc}}" class="img-rounded" alt="Cinque Terre" width="304" height="236"></p>
                 
@@ -32,6 +33,9 @@
     </div>
     {{/each}}
 </div>
+
+</div>
+
 
 <div id = "Book Marked">
     {{#each bMarked}}

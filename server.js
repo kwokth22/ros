@@ -12,38 +12,38 @@ var Challenge = {
     "ChallengeList":[{
     ItemID: 1,
     Name: 'Spicy beef tendon noodles',
-    Description: 'on9 on99 on999 on9 on99 on999 on9 on99 on999 on9 on99 on999 on9 on99 on999 on9 on99 on999 on9 on99 on999 on9 on99 on999 on9 on99 on999',
+    Description: 'Spicy as hell, it cannot eat anymore. Water or milk plz!!!!!!!!!',
     ImageSrc: '../img/Spicy1.jpg'
     },
     {
     ItemID: 2,
     Name: 'Hot Fried Chicken Ramen',
-    Description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.',
+    Description: 'LOL, I cannot eat again. The hottest ramen ever. If you love spicy food, you must like this ramen',
     ImageSrc: '../img/Spicy2.jpg'
     },
     {
     ItemID: 3,
-    Name: 'Name 1',
-    Description: 'I am handsome3!',
+    Name: 'Spicy boiled beef with rice',
+    Description: 'Easy, not so spicy then TamJi SamGor mixian.',
     ImageSrc: '../img/Spicy3.jpg'
     },
     {
     ItemID: 4,
     Name: 'Fantasy Taste in CUHK',
-    Description: 'I am handsome4!',
+    Description: 'Discover the most fantastic restaurant in CUHK.',
     ImageSrc: '../img/franklin.jpg'
     },
     {
     ItemID: 5,
     Name: 'Heavy Taste',
-    Description: 'I am handsome5!',
+    Description: 'Cheese!Cheese!Cheeses everywhere!',
     ImageSrc: '../img/Chesse1.jpg'
     },
     {
     ItemID: 6,
     Name: 'Taste',
-    Description: 'I am handsome6!',
-    ImageSrc: '../img/Spicy2.jpg'
+    Description: 'Tasty Road, Let\'s eat it',
+    ImageSrc: '../img/hotdog.jpg'
     }
     ] 
 };
@@ -65,7 +65,18 @@ app.get('/', function(request, response){
 app.get('/restaurant/', function(request, response){
     var restID = request.query.rest;
     console.log("Get /restaurant/?rest="+restID);
-    response.render('restaurant');
+    for(i=0;i<Challenge.ChallengeList.length;i++){
+        if(Challenge.ChallengeList[i].ItemID==restID){
+            response.render('restaurant',{
+                layout: 'layout',
+                restName: Challenge.ChallengeList[i].Name,
+                restDescription: Challenge.ChallengeList[i].Description,
+                restImg: Challenge.ChallengeList[i].ImageSrc
+            });
+            return;
+        }
+    }
+    response.redirect('/');
 });
 
 
@@ -74,7 +85,7 @@ app.get('/restaurant/', function(request, response){
 
 //  Listen to environment port or port 3000
 app.listen(process.env.PORT || 3000, function(){
-    console.log("Server is running on :  https://cfood-watermelon1995.c9users.io/");
+    console.log("Server is running ");
 });
 
 //  Connect to the mysql db
