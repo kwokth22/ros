@@ -24,9 +24,6 @@
     <!-- Blog Post Content Column -->
     <div class="col-lg-8">
 
-        <!-- Blog Post -->
-
-        <hr>
 
         <!-- Date/Time -->
         <p>
@@ -45,25 +42,39 @@
         <p class="lead">
             {{restDescription}}
         </p>
-        
+
         {{#if restDish.length}}
             {{each restDish}}
                 <p>
                     {{this.Name}}:  {{this.Description}}
                 </p>
         {{/if}}
-            
+
 
         <hr>
 
-        <!-- Blog Comments -->
-
+        <!-- Where to eat-->
+        <div class="row">
+            <div class="col-md-5">
+                <i><h3>Where to eat</h3></i>
+                <h4>Restaurant Name:</h4>
+                <p>Location: </p>
+                <p><span id="status"> Direct to restaurant</span></p>
+            </div>
+            <!-- display map -->
+            <div class="col-md-7">
+                <a href="portfolio-item.html">
+                    <img class="img-responsive img-hover" src="http://placehold.it/700x300" alt="">
+                </a>
+            </div>
+        </div>
+        <hr>
         <!-- Comments Form -->
         <div class="well">
             <h4>Leave a Comment:</h4>
             <form role="form">
                 <div class="form-group">
-                    <textarea class="form-control" rows="3"></textarea>
+                    <textarea class="form-control" rows="3" draggable="false" style="resize:none"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
@@ -98,23 +109,11 @@
                 辣到跳舞。>.<
             </div>
         </div>
-
+        <hr>
     </div>
 
     <!-- Blog Sidebar Widgets Column -->
     <div class="col-md-4">
-
-        <!-- Blog Search Well -->
-        <div class="well">
-            <h4>Search Restaurant</h4>
-            <div class="input-group">
-                <input type="text" class="form-control">
-                <span class="input-group-btn">
-                    <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
-                </span>
-            </div>
-            <!-- /.input-group -->
-        </div>
 
         <!-- Blog Categories Well -->
         <div class="well">

@@ -10,10 +10,13 @@
     <!-- Blog Post Content Column -->
     <div class="col-lg-8">
         <!-- Date/Time -->
+        <hr>
+
         <p>
-            <span class="glyphicon glyphicon-circle-arrow-up"></span>
+            <i class="glyphicon glyphicon-screenshot"></i>
                 InstaUp New Challenge
         </p>
+
         <hr>
         <!-- Upload a new challenge -->
         <form id="uploadform" name="uploadform" action="/InstaUp" method="POST">
@@ -22,20 +25,29 @@
                     <label>Food Name</label>
                     <input name ="foodname" type="text" class="form-control">
                 </div>
-
                 <div class="form-group">
-                    <label id="getLoca">Click to Get Location</label>
-                    <button type="button" class="btn btn-default btn-sm" onclick="getLocation()">
-                    <span class="glyphicon glyphicon-pushpin"></span> Get Location
-                    </button>
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#googleMap">Map</a>
-                    <div id="googleMap" class="panel-collapse collapse" style="width:270px;height:180px;"></div>
+                    <label>Restaurant Name</label>
+                    <input name ="restaurantname" type="text" class="form-control">
                 </div>
-
+                <div class="form-group">
+                    <label id="getLoca">Click to Get Location </label>
+                    <button type="button" class="btn btn-default btn-sm" onclick="getLocation()">
+                    <span class="glyphicon glyphicon-pushpin"></span>
+                    Get Location
+                  </button>
+                  <p></p>
+                    <div id="googleMap" style="width:270px;height:180px;display:none" ></div>
+                </div>
+                <div class="form-group" style="display:none">
+                      <input id="latitude" name ="latitude" type="text" class="form-control">
+                </div>
+                <div class="form-group"style="display:none">
+                      <input id="longitude" name ="longitude" type="text" class="form-control">
+                </div>
                 <div class="clearfix"></div>
                     <div class="form-group ">
                     <label>Description</label>
-                    <textarea class="form-control" rows="6"></textarea>
+                    <textarea class="form-control" rows="6" draggable="false" style="resize:none"></textarea>
                 </div>
                 <div class="form-group">
                     <label> Upload Photo </label>
@@ -46,7 +58,6 @@
                 </div>
             </div>
          </form>
-        <hr>
     </div>
 
 </div>
@@ -56,6 +67,9 @@
 
 <script >
     var x = document.getElementById("getLoca");
+    var y = document.getElementById("googleMap");
+    var lat = document.getElementById("latitude");
+    var lng = document.getElementById('longitude');
     function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition, showError);
@@ -77,8 +91,12 @@
           animation:google.maps.Animation.BOUNCE
           });
         marker.setMap(map);
+        y.style.display='inline-block';
+        lat.value = position.coords.latitude;
+        lng.value = position.coords.longitude;
     }
     function showError(error) {
+
         switch(error.code) {
             case error.PERMISSION_DENIED:
                 x.innerHTML = "Location information is unavailable."
