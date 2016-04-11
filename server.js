@@ -90,7 +90,7 @@ app.get('/message/', function(request, response){
 
 app.get('/login', function(request, response){
   response.render('login',{
-    layout: 'layout'
+    layout: 'layout2'
   });
 });
 
