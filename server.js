@@ -10,9 +10,12 @@ var bodyParser = require('body-parser');
 var fileUpload = require('express-fileupload');
 var fs = require('fs');
 var multer = require('multer');
+var passport = require('passport');
 var upload_avatar = multer({dest: 'uploads/user/'});
 // Handling POST method
 var app = express();
+
+app.use(session({secret: 'loginkey'}));
 
 /*var storage =   multer.diskStorage({
   destination: function (req, file, callback) {
@@ -80,6 +83,16 @@ app.get('/restaurant/', function(request, response){
       });
     });
 });
+
+
+app.get('/InstaUp', function(request, response){
+  response.render('InstaUp', {
+    layout: 'layout'
+  });
+});
+
+
+
 //alert message
 app.get('/message/', function(request, response){
   response.render('message',{
@@ -93,6 +106,12 @@ app.get('/login', function(request, response){
     layout: 'layout2'
   });
 });
+
+app.post('/login',function(request, response){
+
+});
+
+
 
 
 // handling registeration
