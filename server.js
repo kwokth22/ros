@@ -12,7 +12,31 @@ var fs = require('fs');
 var multer = require('multer');
 var passport = require('passport');
 var localStrategy = require('passport-local').Strategy;
-var upload_avatar = multer({dest: 'uploads/user/'});
+
+
+//Set up storage for food picture
+var storage_foodpic = multer.diskStorage({
+  destination: function(request, file, cb){
+    cb(null, 'uploads/foodpic');
+  },
+  filename: function(request, file, cb){
+    cb(null, Date.now()+".jpg");
+  }
+});
+var upload_foodpic = multer({storage: storage_foodpic});
+
+//set up storage for user avatar
+var storage_avatar = multer.diskStorage({
+  destination: function(request, file, cb){
+    cb(null, 'uploads/user');
+  },
+  filename: function(request, file, cb){
+    cb(null, Date.now()+".jpg");
+  }
+});
+var upload_avatar = multer({storage : storage_avatar});
+
+
 // Handling POST method
 var app = express();
 // app.use(bodyParser.urlencoded({extended: false}));
@@ -36,7 +60,7 @@ function checkAuth(request, response, next){
 
  // Connect to the mysql db
 var connection = mysql.createConnection({
-    host    :   'localhost',
+    host    :   '25.72.173.193',
     user    :   'watermelon1995',
     password:   'qwertyuiop',
     database:   'cfood_db'
@@ -107,11 +131,24 @@ app.get('/InstaUp', function(request, response){
   });
 });
 
-app.post('/InstaUp',upload_avatar.single('uploadphoto'), function(request, response){
-  var items = {
-
-  }
-  connection.query("INSERT INTO user set ?", items, function(request, response){
+app.post('/InstaUp',upload_foodpic.single('uploadphoto'), function(request, response){
+  console.log(util.inspect(request.body));
+  console.log(util.inspect(request.file));
+  var newitems = {
+    Name: request.body.foodname,
+    restaurantname: request.body.restaurantname,
+    foodtype: request.body.foodtype,
+    latitude: request.body.latitude,
+    longitude: request.body.longitude,
+    Description: request.body.description,
+    ImageSrc: request.file.path
+  };
+  connection.query("INSERT INTO items set ?", newitems, function(error, result){
+    if(error){
+      response.status(500).end();
+    }else {
+      response.redirect("/");
+    }
 
   });
 });
@@ -135,6 +172,8 @@ app.get('/login', function(request, response){
     });
   }
 });
+
+
 
 app.post('/login',upload_avatar.single(), function(request, response){
   var login_info = request.body;
@@ -175,8 +214,7 @@ app.get('/signup/', function(request, response){
   });
 });
 
-app.post('/signup/', upload_avatar.single('avatar'), function (request, response) {
-  //console.log("A new user has registered.");
+app.post('/signup', upload_avatar.single('avatar'), function (request, response) {
   console.log("A user has signed up");
   console.log(util.inspect(request.file));
   var srcPath = request.file.path;
@@ -193,6 +231,7 @@ app.post('/signup/', upload_avatar.single('avatar'), function (request, response
         return;
       }
       response.send("Sign up successfully");
+      response.redirect('/login');
   });
 });
 // handling registeration
@@ -214,6 +253,7 @@ app.use('/font-awesome',express.static('client/font-awesome'));
 app.use('/fonts',express.static('client/fonts'));
 app.use('/img',express.static('client/img'));
 app.use('/js',express.static('client/js'));
+app.use('/uploads', express.static('uploads'));
 // app.use(session({
 //   genid: function(req) {
 //     return genuuid() // use UUIDs for session IDs
