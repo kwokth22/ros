@@ -58,16 +58,26 @@ app.set('view engine', '.hbs');
 
 //  Basic Routing
 app.get('/', function(request, response){
+
   connection.query('SELECT * FROM items', function(error, itemsRow){
     if(error){
       console.console.error(error);
       response.status(500).end();
       return;
     }
-    response.render('index',{
-      layout: 'layout',
-      chall: itemsRow
-    });
+    if(request.session.user_id){
+      response.render('index',{
+        layout: 'layout',
+        chall: itemsRow,
+        username: request.session.user_id
+      });
+    }else{
+      response.render('index',{
+        layout: 'layout',
+        chall: itemsRow
+      });
+    }
+
   });
 });
 
@@ -93,10 +103,18 @@ app.get('/restaurant/', function(request, response){
 
 app.get('/InstaUp', function(request, response){
   response.render('InstaUp', {
-    layout: 'layout'
+    layout: 'layout2'
   });
 });
 
+app.post('/InstaUp',upload_avatar.single('uploadphoto'), function(request, response){
+  var items = {
+
+  }
+  connection.query("INSERT INTO user set ?", items, function(request, response){
+
+  });
+});
 
 
 //alert message

@@ -70,8 +70,14 @@
     				<li>
                         <a href="/help">Help</a>
                     </li>
-    				<li>
-                        <a href="/login"><span class="glyphicon glyphicon-user"></span>Log In</a>
+    				        <li>
+                        <a href="/login"><span class="glyphicon glyphicon-user"></span>
+                          {{#if username}}
+                            {{username}}
+                          {{else}}
+                            Login
+                          {{/if}}
+                        </a>
                     </li>
                 </ul>
             </div>
