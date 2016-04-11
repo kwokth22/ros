@@ -6,15 +6,19 @@
         <h2>Log in</h2>
         <form  id="loginform" name="loginform"  action="/login" method="POST" encType="multipart/form-data">
           <div class="form-group">
-            <label for="user">User name</label>
-            <input name="username" type="text" class="form-control" >
+            <label for="user">Username</label>
+            <input name="username" type="text" class="form-control" placeholder="Username">
           </div>
           <div class="form-group">
             <label for="pw">Password</label>
             <input name="pw" type="password" class="form-control" placeholder="Password">
           </div>
-           <button type="submit" class="btn btn-default" >Log in</button>
-           <button type"sumbit" class="btn btn-default" ><a href="signup">Not a member yet? Sign up Now</a></button>
-        </form>
+           <button type="submit" class="btn-primary pull-left" >Log in</button>
+         </form>
+         <div class="form-group">
+           <form id="signup" action="/signup">
+           <button type"sumbit" class="btn-success pull-right" >Not a member yet? Sign up Now</button>
+           </form>
+        </div>
     </div>
 </div>
