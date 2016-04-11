@@ -19,9 +19,18 @@ var app = express();
 // app.use(bodyParser.json());
 
 //
-// app.use(session({secret: 'loginkey'}));
+app.use(session({secret: 'loginkey'}));
 // app.use(passport.initialize());
 // app.use(passport.session());
+
+function checkAuth(request, response, next){
+  if(!request.session.user_id){
+    response.send('You are not authorized to view this page');
+  }else{
+    next();
+  }
+};
+
 
 
 
@@ -99,9 +108,14 @@ app.get('/message/', function(request, response){
 });
 
 app.get('/login', function(request, response){
-  response.render('login',{
-    layout: 'layout2'
-  });
+  if(request.session.user_id){
+    console.log("You have already login");
+    response.redirect('/');
+  }else{
+    response.render('login',{
+      layout: 'layout2'
+    });
+  }
 });
 
 app.post('/login',upload_avatar.single(), function(request, response){
@@ -126,6 +140,7 @@ app.post('/login',upload_avatar.single(), function(request, response){
       return;
     }
     console.log(login_info.username+" Login Successfully");
+    request.session.user_id = login_info.username;
     response.redirect("/");
   });
 });
