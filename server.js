@@ -6,26 +6,23 @@ var path = require("path");
 var exphbs = require('express-handlebars');
 var mysql = require('mysql');
 var session = require('express-session');
-var bodyParser = require('body-parser');
-var fileUpload = require('express-fileupload');
+// var bodyParser = require('body-parser');
+// var fileUpload = require('express-fileupload');
 var fs = require('fs');
 var multer = require('multer');
 var passport = require('passport');
+var localStrategy = require('passport-local').Strategy;
 var upload_avatar = multer({dest: 'uploads/user/'});
 // Handling POST method
 var app = express();
+// app.use(bodyParser.urlencoded({extended: false}));
+// app.use(bodyParser.json());
 
-app.use(session({secret: 'loginkey'}));
+//
+// app.use(session({secret: 'loginkey'}));
+// app.use(passport.initialize());
+// app.use(passport.session());
 
-/*var storage =   multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, './uploads');
-  },
-  filename: function (req, file, callback) {
-    callback(null, file.fieldname + '-' + Date.now());
-  }
-});
-var upload = multer({ storage : storage}).single('avatar');*/
 
 
  // Connect to the mysql db
@@ -107,9 +104,33 @@ app.get('/login', function(request, response){
   });
 });
 
-app.post('/login',function(request, response){
-
+app.post('/login',upload_avatar.single(), function(request, response){
+  var login_info = request.body;
+  connection.query("SELECT * FROM user WHERE username = ?",[login_info.username], function(err, rows){
+    if(err)
+      console.log("Error");
+    if(!rows.length){
+      console .log("User not found");
+      response.render('login',{
+        layout: 'layout2',
+        errorMsg: "User not found"
+      });
+      return;
+    }
+    if(rows[0].pw!=login_info.pw ){
+      console.log("Wrong Password");
+      response.render('login',{
+        layout: 'layout2',
+        errorMsg: "Wrong Password"
+      });
+      return;
+    }
+    console.log(login_info.username+" Login Successfully");
+    response.redirect("/");
+  });
 });
+
+
 
 
 
@@ -124,6 +145,7 @@ app.get('/signup/', function(request, response){
 app.post('/signup/', upload_avatar.single('avatar'), function (request, response) {
   //console.log("A new user has registered.");
   console.log("A user has signed up");
+  console.log(util.inspect(request.file));
   var srcPath = request.file.path;
   var userinfo = {
     username: request.body.username,
@@ -139,12 +161,6 @@ app.post('/signup/', upload_avatar.single('avatar'), function (request, response
       }
       response.send("Sign up successfully");
   });
-
-
-
-
-
-
 });
 // handling registeration
 
