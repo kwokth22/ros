@@ -45,19 +45,32 @@
         <p class="lead">
             {{restDescription}}
         </p>
-        
+
         {{#if restDish.length}}
             {{each restDish}}
                 <p>
                     {{this.Name}}:  {{this.Description}}
                 </p>
         {{/if}}
-            
+
 
         <hr>
 
-        <!-- Blog Comments -->
-
+        <!-- Where to eat-->
+        <div class="row">
+            <div class="col-md-5">
+                <h3>Where to eat</h3>
+                <h4>Restaurant Name:</h4>
+                <p>Location: </p><p><span id="status"> get location</span></p>
+            </div>
+            <!-- display map -->
+            <div class="col-md-7">
+                <a href="portfolio-item.html">
+                    <img class="img-responsive img-hover" src="http://placehold.it/700x300" alt="">
+                </a>
+            </div>
+        </div>
+        <hr>
         <!-- Comments Form -->
         <div class="well">
             <h4>Leave a Comment:</h4>
