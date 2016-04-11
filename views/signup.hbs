@@ -15,11 +15,11 @@
           </div>
           <div class="form-group">
             <label for="exampleInputPassword1">Password</label>
-            <input name="pw" type="password" class="form-control" placeholder="Password">
+            <input name="password" id="password" type="password" class="form-control" placeholder="Password">
           </div>
           <div class="form-group">
             <label for="exampleInputPassword1">Retype password</label>
-            <input name="pw2" type="password" class="form-control"  placeholder="Password">
+            <input name="txtconfirmPassword" id="txtconfirmPassword" type="password" class="form-control"  placeholder="Password" onChange="checkPasswordMatch();">
           </div>
           <div class="form-group">
             <label for="avatar">Avatar</label>
@@ -27,7 +27,23 @@
           </div>
            <button type="submit" class="btn btn-default" >Sign up</button>
         </form>
-       
+       <div id="divCheckPasswordMatch" class="alert alert-danger"></div>
     </div>
-    
+
 </div>
+
+<script>
+    function checkPasswordMatch() {
+      var password = $("#password").val();
+      var confirmPassword = $("#txtConfirmPassword").val();
+
+      if (password != confirmPassword)
+          $("#divCheckPasswordMatch").html("Passwords do not match!");
+      else
+          $("#divCheckPasswordMatch").html("Passwords match.");
+    }
+
+    $(document).ready(function () {
+     $("#txtConfirmPassword").keyup(checkPasswordMatch);
+    });
+</script>
