@@ -1,17 +1,22 @@
 //  Include Node modules
 var util = require('util'); // debug
 var express = require('express');
-// var multer  = require('multer');
 var path = require("path");
 var exphbs = require('express-handlebars');
 var mysql = require('mysql');
 var session = require('express-session');
+
 // var bodyParser = require('body-parser');
 // var fileUpload = require('express-fileupload');
 var fs = require('fs');
 var multer = require('multer');
 var passport = require('passport');
 var localStrategy = require('passport-local').Strategy;
+
+var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
 
 
 //Set up storage for food picture
@@ -38,7 +43,7 @@ var upload_avatar = multer({storage : storage_avatar});
 
 
 // Handling POST method
-var app = express();
+
 // app.use(bodyParser.urlencoded({extended: false}));
 // app.use(bodyParser.json());
 
@@ -190,6 +195,62 @@ app.get('/login', function(request, response){
   }
 });
 
+app.get('/about', function(request, response){
+  response.render('about',{
+    layout: 'layout'
+  });
+});
+
+app.get('/search', function(request, response){
+
+  response.render('search',{
+    layout: 'layout'
+  });
+});
+
+app.get('/chatroom', function(request, response){
+  response.sendFile(__dirname+'/client/chatroom.html');
+});
+
+var userCnt = 0;
+//Socket.io
+io.on('connection', function(socket){
+
+	//New user
+	socket.on('add user',function(msg){
+		socket.username = msg; // Save the user name
+		console.log("new user:"+msg+" logged in.");
+
+		//Send the name to everyone
+		io.emit('add new user',{
+			username: socket.username
+		});
+		userCnt++; //increment User counter
+	});
+
+	//Send Chat Message
+	socket.on('chat message', function(msg){
+		console.log(socket.username+":"+msg);
+
+  	//New Message, send the name and msg to everyone
+		io.emit('chat message', {
+			username:socket.username,
+			msg:msg
+		});
+	});
+
+	// Disconnect
+	socket.on('disconnect',function(){
+		console.log(socket.username+" disconnected.");
+
+		//Send the name to everyone
+		io.emit('user dc',{
+			username:socket.username
+		});
+	});
+
+
+});
 
 
 app.post('/login',upload_avatar.single(), function(request, response){
@@ -221,10 +282,6 @@ app.post('/login',upload_avatar.single(), function(request, response){
     response.redirect("/");
   });
 });
-
-
-
-
 
 
 // handling registeration
@@ -298,7 +355,7 @@ app.get('/logout', function(request, response){
 });
 
 //  Listen to environment port or port 3000
-app.listen(process.env.PORT || 3000, function(){
+http.listen(process.env.PORT || 3000, function(){
     console.log("Server is running ");
 });
 

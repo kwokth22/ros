@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      #m{
+        border: 2px solid black;
+        padding: 10px;
+        width: 90%;
+        margin: .5%;
+        position: fixed;
+        bottom: 0;
+      }
+      #send{
+        width: 8%;
+        margin: .5%;
+
+        padding: 10px;
+        position: fixed;
+        bottom: 0;
+        right:5px;
+      }
+      #message_block{
+        width:100%;
+        position: absolute;
+        top:0;
+        bottom:5%;
+        margin-bottom:10px;
+        border: solid 2px black;
+        overflow:auto;
+      }
+      #messages {
+        list-style-type: none;
+        margin: 10px;
+
+        padding: 0;
+      }
+      #messages li {
+        padding: 5px 10px;
+        font-size:16pt;
+      }
+      #messages li:nth-child(odd) {
+        background: #eee;
+      }
+      .conversation-wrap
+    {
+        box-shadow: -2px 0 3px #ddd;
+        padding:0;
+        max-height: 400px;
+        overflow: auto;
+    }
+    .conversation
+    {
+        padding:5px;
+        border-bottom:1px solid #ddd;
+        margin:0;
+
+    }
+
+    .message-wrap
+    {
+        box-shadow: 0 0 3px #ddd;
+        padding:0;
+
+    }
+    .msg
+    {
+        padding:5px;
+        /*border-bottom:1px solid #ddd;*/
+        margin:0;
+    }
+    .msg-wrap
+    {
+        padding:10px;
+        max-height: 400px;
+        overflow: auto;
+
+    }
+
+    .time
+    {
+        color:#bfbfbf;
+    }
+
+    .send-wrap
+    {
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+        padding:10px;
+        /*background: #f8f8f8;*/
+    }
+
+    .send-message
+    {
+        resize: none;
+    }
+
+    .highlight
+    {
+        background-color: #f7f7f9;
+        border: 1px solid #e1e1e8;
+    }
+
+
+    .msg-wrap .media-heading
+    {
+        color:#003bb3;
+        font-weight: 700;
+    }
+
+
+    .msg-date
+    {
+        background: none;
+        text-align: center;
+        color:#aaa;
+        border:none;
+        box-shadow: none;
+        border-bottom: 1px solid #ddd;
+    }
+
+
+    body::-webkit-scrollbar {
+        width: 12px;
+    }
+
+
+    /* Let's get this party started */
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+/*        -webkit-border-radius: 10px;
+        border-radius: 10px;*/
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+/*        -webkit-border-radius: 10px;
+        border-radius: 10px;*/
+        background:#ddd;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+    }
+    ::-webkit-scrollbar-thumb:window-inactive {
+        background: #ddd;
+    }
+
+    </style>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var socket = io();
+      $(document).ready(function(){
+      	var date;
+      	var current_hour;
+      	var current_min;
+      	var current_sec;
+        var name = prompt("Please input you name","guest");
+        if(name=="" || name==null){
+          name = "guest";
+        }
+        //Server
+        socket.emit("add user",name);
+        //New msg
+        socket.on('chat message', function(data){
+          date = new Date()
+		  current_hour = date.getHours();
+		  current_min = date.getMinutes();
+		  current_sec = date.getSeconds();
+          appendMessage(data.username, data.msg);
+        });
+        socket.on('add user',function(data){
+          appendState(data.username+"Join");
+        });
+        socket.on('user left',function(data){
+          appendState(data.username+"Left");
+        });
+        $('#send').click(function(){
+          var text = $('#m').val();
+          socket.emit('chat message', text);
+          $('#m').val('');
+          return false;
+        });
+        $("#m").keydown(function(event){
+          if ( event.which == 13 ){
+            $('#send').click();
+          }
+        });
+        /*function appendMessage(uname, msg){
+          $('#messages').append($('<li>').text(uname));
+          $('#messages').append($('<li>').text(msg));
+          var message = document.getElementById("message_block");
+          message.scrollTop = message.scrollHeight;
+        }*/
+        function appendMessage(uname, msg){
+          $('#messages').append("<li class=\"right clearfix\"><span class=\"chat-img pull-right\"><img src=\"http://bootdey.com/img/Content/user_1.jpg\" alt=\"User Avatar\"></span><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\">"+uname+"</strong><small class=\"pull-right text-muted\"><i class=\"fa fa-clock-o\"></i> "+current_hour+":"+current_min+":"+current_sec+"</small></div><p>"+msg+" </p></div></li>");
+          var message = document.getElementById("message_block");
+          message.scrollTop = message.scrollHeight;
+        }
+        function appendState(msg){
+          $('#messages').append($('<li>').text(msg));
+          var message = document.getElementById("message_block");
+          message.scrollTop = message.scrollHeight;
+        }
+      });
+
+    </script>
+  </head>
+  <body>
+  <div id="message_block">
+    <ul id="messages"></ul>
+  </div>
+
+    <div class="input-group">
+		<input class="form-control border no-shadow no-rounded" placeholder="Type your message here" id="m">
+		<span class="input-group-btn">
+			<button class="btn btn-success no-rounded" type="button" id="send">Send!</button>
+		</span>
+	</div><!-- /input-group -->
+  </body>
+</html>
