@@ -86,50 +86,50 @@
         <hr>
         {{/if}}
 
-        <!-- Posted Comments -->
 
-        <!-- Comment -->
-        <div class="media">
-            <a class="pull-left" href="#">
-                <img class="media-object" src="http://placehold.it/64x64" alt="">
-            </a>
+        <!-- List Posted Comment -->
+        {{#each comment}}
+        <div id="comment" class="media">
+          <!-- load avatar image-->
+            <img class="media-object" src="{{this.avatar}}" width="64" height="64">
+            <!--comment -->
             <div class="media-body">
-                <h4 class="media-heading">HIHI Son
-                    <small>August 25, 2014 at 9:30 PM</small>
+                <h4 class="media-heading">
+                    <!--load date-->
+                    <small>{{this.date}}</small>
                 </h4>
-                I tries this. Very Good!
-            </div>
-        </div>
-
-        <!-- Comment -->
-        <div class="media">
-            <a class="pull-left" href="#">
-                <img class="media-object" src="http://placehold.it/64x64" alt="">
-            </a>
-            <div class="media-body">
-                <h4 class="media-heading">HIHI SON 2
-                    <small>August 25, 2014 at 9:30 PM</small>
-                </h4>
-                辣到跳舞。>.<
+                <!--load comment-->
+                {{this.comment}}
             </div>
         </div>
         <hr>
+        {{/each}}
+
     </div>
 
     <!-- Blog Sidebar Widgets Column -->
     <div class="col-md-4">
 
-        <!-- Blog Categories Well -->
+        <!-- Rating -->
         <div class="well">
-            <h4>Rating 1 to 5</h4>
+            <h4>Rating: 1 to 5 </h4>
+            <p>
+            (1: boring<span class="glyphicon glyphicon-trash"></span> -  5: Most challenging<span class="glyphicon glyphicon-fire"></span> )</h4></p>
+            <form id="rating" name="rating" action="/InstaUp" method="POST" enctype="multipart/form-data">
+            <select name="rating" id="rating" class="form-control">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+            <br>
             <div class="row">
                 <div class="col-lg-6">
-
-
                 <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>
-            <!-- /.row -->
+          </form>
         </div>
 
         <!-- Side Widget Well -->
