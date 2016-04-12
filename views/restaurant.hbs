@@ -76,7 +76,7 @@
         {{#if username}}
           <div class="well">
               <h4>Leave a Comment:</h4>
-              <form role="form" method="POST" action="/restaurant" enctype="multipart/form-data">
+              <form role="form" method="POST" action="/restaurant/?post=true" enctype="multipart/form-data">
                   <div class="form-group">
                       <textarea name="comment" id="comment" class="form-control" rows="3" draggable="false" style="resize:none"></textarea>
                   </div>
@@ -94,7 +94,7 @@
             <img class="media-object" src="{{this.avatar}}" width="64" height="64">
             <!--comment -->
             <div class="media-body">
-                <h4 class="media-heading">
+                <h4 class="media-heading">{{this.username}}
                     <!--load date-->
                     <small>{{this.date}}</small>
                 </h4>
@@ -116,7 +116,7 @@
             <p>
             (1: boring<span class="glyphicon glyphicon-trash"></span> -  5: Most challenging<span class="glyphicon glyphicon-fire"></span> )</h4></p>
             <!--change action-->
-            <form id="rating" name="rating" action="/InstaUp" method="POST" enctype="multipart/form-data">
+            <form id="rating" name="rating" action="/restaurant/?rating=true" method="POST" enctype="multipart/form-data">
             <select name="rating" id="rating" class="form-control">
               <option value="1">1</option>
               <option value="2">2</option>
