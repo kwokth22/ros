@@ -190,7 +190,11 @@ app.get('/login', function(request, response){
   }
 });
 
-
+app.get('/about', function(request, response){
+  response.render('about',{
+    layout: 'layout'
+  });
+});
 
 app.post('/login',upload_avatar.single(), function(request, response){
   var login_info = request.body;
@@ -221,10 +225,6 @@ app.post('/login',upload_avatar.single(), function(request, response){
     response.redirect("/");
   });
 });
-
-
-
-
 
 
 // handling registeration
