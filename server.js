@@ -89,11 +89,14 @@ app.get('/', function(request, response){
       response.status(500).end();
       return;
     }
-    if(request.session.user_id){
+    console.log(util.inspect(request.session.sysMsg));
+
+    if(request.session){
       response.render('index',{
         layout: 'layout',
         chall: itemsRow,
-        username: request.session.user_id
+        username: request.session.user_id,
+        sysMsg: request.session.sysMsg
       });
     }else{
       response.render('index',{
@@ -101,7 +104,7 @@ app.get('/', function(request, response){
         chall: itemsRow
       });
     }
-
+    delete request.session.sysMsg;
   });
 });
 
@@ -117,13 +120,19 @@ app.get('/restaurant/', function(request, response){
       }
       response.render('restaurant', {
         layout: 'layout',
+        username: request.session.user_id,
         restName: itemDetail[0].Name,
         restDescription: itemDetail[0].Description,
         restImg: itemDetail[0].ImageSrc
+
       });
     });
 });
 
+
+app.post('/restaurant',upload_avatar.single(), function(request, response){
+  console.log(util.inspect(request.body));
+});
 
 app.get('/InstaUp', function(request, response){
   response.render('InstaUp', {
@@ -134,6 +143,7 @@ app.get('/InstaUp', function(request, response){
 app.post('/InstaUp',upload_foodpic.single('uploadphoto'), function(request, response){
   console.log(util.inspect(request.body));
   console.log(util.inspect(request.file));
+  var ImageSrc = "../"+request.file.path;
   var newitems = {
     Name: request.body.foodname,
     restaurantname: request.body.restaurantname,
@@ -141,7 +151,7 @@ app.post('/InstaUp',upload_foodpic.single('uploadphoto'), function(request, resp
     latitude: request.body.latitude,
     longitude: request.body.longitude,
     Description: request.body.description,
-    ImageSrc: request.file.path
+    ImageSrc: ImageSrc
   };
   connection.query("INSERT INTO items set ?", newitems, function(error, result){
     if(error){
@@ -198,6 +208,9 @@ app.post('/login',upload_avatar.single(), function(request, response){
     }
     console.log(login_info.username+" Login Successfully");
     request.session.user_id = login_info.username;
+    request.session.sysMsg = {
+        success: true,
+        content: login_info.username+" Login Successfully"};
     response.redirect("/");
   });
 });
@@ -235,7 +248,13 @@ app.post('/signup', upload_avatar.single('avatar'), function (request, response)
   });
 });
 // handling registeration
-
+app.get('/logout', function(request, response){
+  delete request.session.user_id;
+  request.session.sysMsg = {
+    success: true,
+    content: "You have logout"};
+  response.redirect('/');
+});
 
 //  Listen to environment port or port 3000
 app.listen(process.env.PORT || 3000, function(){
