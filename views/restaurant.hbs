@@ -72,7 +72,19 @@
         <hr>
 
 
-
+        <!-- Comments Form -->
+        {{#if username}}
+          <div class="well">
+              <h4>Leave a Comment:</h4>
+              <form role="form" method="POST" enctype="multipart/form-data">
+                  <div class="form-group">
+                      <textarea class="form-control" rows="3" draggable="false" style="resize:none"></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+          </div>
+        <hr>
+        {{/if}}
 
         <!-- Posted Comments -->
 
