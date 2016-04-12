@@ -223,28 +223,62 @@ app.post('/login',upload_avatar.single(), function(request, response){
 // handling registeration
 app.get('/signup/', function(request, response){
   response.render('signup',{
-    layout: 'layout'
+    layout: 'layout',
+    sysMsg: request.session.sysMsg
   });
+  delete request.session.sysMsg;
 });
 
 app.post('/signup', upload_avatar.single('avatar'), function (request, response) {
   console.log("A user has signed up");
   console.log(util.inspect(request.file));
-  var srcPath = request.file.path;
-  var userinfo = {
-    username: request.body.username,
-    pw: request.body.pw,
-    name: request.body.name,
-    avatar: srcPath
-  };
-  connection.query('INSERT INTO user set ?', userinfo, function(error, result){
-      if(error){
-        console.error(error);
-        response.redirect('/signup');
-        return;
-      }
-      response.send("Sign up successfully");
-      response.redirect('/login');
+  if(typeof request.file !== 'underfined'){
+    var srcPath = "../img/default.jpg";
+  }else{
+    var srcPath = "../"+request.file.path;
+  }
+  connection.query('SELECT username FROM user where username = ?',request.body.username, function(error, rows){
+    if(error){
+      console.error(error);
+      request.session.sysMsg = {
+        success: false,
+        content: error
+      };
+      response.redirect('/signup');
+      return;
+    }else if(rows.length>0){
+      console.log(util.inspect(rows));
+      request.session.sysMsg = {
+        success: false,
+        content: "User Name has been used"
+      };
+      response.redirect('/signup');
+      return;
+    }else{
+      var userinfo = {
+        username: request.body.username,
+        pw: request.body.password,
+        name: request.body.name,
+        avatar: srcPath
+      };
+      connection.query('INSERT INTO user set ?', userinfo, function(error, result){
+          if(error){
+            console.error(error);
+            request.session.sysMsg = {
+              success: false,
+              content: error
+            };
+            response.redirect('/signup');
+            return;
+          }else{
+            response.redirect('/login');
+            request.session.sysMsg = {
+              success: true,
+              content: "You have successfully signup"
+            };
+          }
+      });
+    }
   });
 });
 // handling registeration
