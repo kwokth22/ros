@@ -60,12 +60,10 @@
                 <u><i><h3>Where to eat</h3></i></u>
                 <h5>Restaurant Name:</h5>
                 <h5>Restaurant Location:</h5>
-                <p id=get_lat >{{latitude}}</p>
-                <p id=get_lng >{{longitude}}</p>
                 <p id=get_lat style="display:none">{{location.latitude}}</p>
                 <p id=get_lng style="display:none">{{location.longitude}}</p>
-                <label id="getLoca">Click to open map</label>
-                <button type="button" class="btn btn-default btn-sm" onclick="getLocation()">
+                <label id="getLoca">Open Map</label>
+                <button type="button" class="btn btn-default btn-sm" onclick="showPosition()">
                 <span class="glyphicon glyphicon-pushpin"></span>
                 </button>
             </div>
@@ -152,44 +150,20 @@
 <script >
     var x = document.getElementById("getLoca");
     var y = document.getElementById("googleMap");
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition, showError);
-        } else {
-            x.innerHTML = "Geolocation is not supported by this browser.";
-        }
-    }
-    function showPosition(position) {
-        var latlon = position.coords.latitude + "," + position.coords.longitude;
-        var myCenter=new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-        var mapProp = {
-          center:myCenter,
-          zoom:15,
-          mapTypeId:google.maps.MapTypeId.ROADMAP
-          };
-        var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
-        var marker=new google.maps.Marker({
-          position:myCenter,
-          animation:google.maps.Animation.BOUNCE
-          });
-        marker.setMap(map);
-        y.style.display='inline-block';
-    }
-    function showError(error) {
+    function showPosition() {
+      var dest = new google.maps.LatLng({{location.latitude}}, {{location.longitude}});
+      var myOptions = {
+        zoom: 20,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        center: dest
+      }
+      var map = new google.maps.Map(document.getElementById("googleMap"),myOptions);
 
-        switch(error.code) {
-            case error.PERMISSION_DENIED:
-                x.innerHTML = "Location information is unavailable."
-                break;
-            case error.POSITION_UNAVAILABLE:
-                x.innerHTML = "Location information is unavailable."
-                break;
-            case error.TIMEOUT:
-                x.innerHTML = "The request to get user location timed out."
-                break;
-            case error.UNKNOWN_ERROR:
-                x.innerHTML = "An unknown error occurred."
-                break;
-        }
+      var marker = new google.maps.Marker({
+        position:dest,
+        animation:google.maps.Animation.BOUNCE
+        });
+      marker.setMap(map);
+      y.style.display='inline-block';
     }
 </script>
