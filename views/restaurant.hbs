@@ -5,13 +5,13 @@
 <div class="row">
     <div class="col-lg-12">
         <h1 class="page-header">
-            {{restName}}
+            {{foodName}}
         </h1>
         <ol class="breadcrumb">
             <li><a href="/">Home</a>
             </li>
             <li class="active">
-                {{restName}}
+                {{foodName}}
             </li>
         </ol>
     </div>
@@ -58,13 +58,10 @@
         <div class="row">
             <div class="col-md-5">
                 <u><i><h3>Where to eat</h3></i></u>
-                <h5>Restaurant Name:</h5>
-                <h5>Restaurant Location:</h5>
-                <p id=get_lat style="display:none">{{location.latitude}}</p>
-                <p id=get_lng style="display:none">{{location.longitude}}</p>
-                <label id="getLoca">Open Map</label>
+                <h5>Restaurant Name: {{restName}}</h5>
+                <h5><label id="getLoca">Map Location</label></h5>
                 <button type="button" class="btn btn-default btn-sm" onclick="showPosition()">
-                <span class="glyphicon glyphicon-pushpin"></span>
+                <span class="glyphicon glyphicon-pushpin"></span>Click to open
                 </button>
             </div>
             <!-- display map -->
