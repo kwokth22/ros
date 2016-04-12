@@ -196,6 +196,12 @@ app.get('/about', function(request, response){
   });
 });
 
+app.get('/search', function(request, response){
+  response.render('search',{
+    layout: 'layout'
+  });
+});
+
 app.post('/login',upload_avatar.single(), function(request, response){
   var login_info = request.body;
   connection.query("SELECT * FROM user WHERE username = ?",[login_info.username], function(err, rows){
