@@ -54,10 +54,13 @@
         <hr>
 
         <!-- Where to eat-->
+        {{#if location}}
         <div class="row">
             <div class="col-md-5">
                 <u><i><h3>Where to eat</h3></i></u>
                 <h4>Restaurant Name:</h4>
+                <p id=get_lat style="display:none">{{location.lat}}</p>
+                <p id=get_lng style="display:none">{{location.lng}}</p>
                 <label id="getLoca">Click to Direct</label>
                 <button type="button" class="btn btn-default btn-sm" onclick="getLocation()">
                 <span class="glyphicon glyphicon-pushpin"></span>
@@ -70,7 +73,7 @@
             </div>
         </div>
         <hr>
-
+        {{/if}}
 
         <!-- Comments Form -->
         {{#if username}}
@@ -147,6 +150,8 @@
 <script >
     var x = document.getElementById("getLoca");
     var y = document.getElementById("googleMap");
+    var get_lat = document.getElementById('get_lat');
+    var get_lng = document.getElementById('get_lng');
     function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition, showError);
