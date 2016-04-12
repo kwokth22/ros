@@ -118,13 +118,20 @@ app.get('/restaurant/', function(request, response){
         response.status(500).end();
         return;
       }
+      var location;
+      if(itemDetail[0].latitude && itemDetail[0].longitude){
+        location = {
+          latitude: itemDetail[0].latitude,
+          longitude: itemDetail[0].longitude
+        };
+      }
       response.render('restaurant', {
         layout: 'layout',
         username: request.session.user_id,
         restName: itemDetail[0].Name,
         restDescription: itemDetail[0].Description,
-        restImg: itemDetail[0].ImageSrc
-
+        restImg: itemDetail[0].ImageSrc,
+        location: location
       });
     });
 });
