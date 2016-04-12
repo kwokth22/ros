@@ -208,8 +208,11 @@ app.get('/search', function(request, response){
   });
 });
 
-app.get('/chatroom', function(request, response){
-  response.sendFile(__dirname+'/client/chatroom.html');
+app.get('/instantchat', function(request, response){
+  //response.sendFile(__dirname+'/client/chatroom.html');
+  response.render('instantchat',{
+    layout: 'layout3'
+  });
 });
 
 var userCnt = 0;

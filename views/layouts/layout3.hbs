@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="cFood.icon"
+     href="../img/icon.png" />
+    <title>Welcome to cFood - Challenging Food System</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../css/modern-business.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+
+      #messages li:nth-child(odd) {
+        background: #eee;
+      }
+ 
+
+    .time
+    {
+        color:#bfbfbf;
+    }
+
+
+
+    .send-message
+    {
+        resize: none;
+    }
+
+    .highlight
+    {
+        background-color: #f7f7f9;
+        border: 1px solid #e1e1e8;
+    }
+
+
+    .msg-wrap .media-heading
+    {
+        color:#003bb3;
+        font-weight: 700;
+    }
+
+
+    .msg-date
+    {
+        background: none;
+        text-align: center;
+        color:#aaa;
+        border:none;
+        box-shadow: none;
+        border-bottom: 1px solid #ddd;
+    }
+
+
+    body::-webkit-scrollbar {
+        width: 12px;
+    }
+
+
+    /* Let's get this party started */
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+/*        -webkit-border-radius: 10px;
+        border-radius: 10px;*/
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+/*        -webkit-border-radius: 10px;
+        border-radius: 10px;*/
+        background:#ddd;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+    }
+    ::-webkit-scrollbar-thumb:window-inactive {
+        background: #ddd;
+    }
+
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var socket = io();
+      $(document).ready(function(){
+        var date;
+        var current_hour;
+        var current_min;
+        var current_sec;
+        var name = prompt("Please input you name","guest");
+        if(name=="" || name==null){
+          name = "guest";
+        }
+        //Server
+        socket.emit("add user",name);
+        //New msg
+        socket.on('chat message', function(data){
+          date = new Date()
+          current_hour = date.getHours();
+          current_min = date.getMinutes();
+          current_sec = date.getSeconds();
+          appendMessage(data.username, data.msg);
+        });
+        socket.on('add user',function(data){
+          appendState(data.username+"Join");
+        });
+        socket.on('user left',function(data){
+          appendState(data.username+"Left");
+        });
+        $('#send').click(function(){
+          var text = $('#m').val();
+          socket.emit('chat message', text);
+          $('#m').val('');
+          return false;
+        });
+        $("#m").keydown(function(event){
+          if ( event.which == 13 ){
+            $('#send').click();
+          }
+        });
+        /*function appendMessage(uname, msg){
+          $('#messages').append($('<li>').text(uname));
+          $('#messages').append($('<li>').text(msg));
+          var message = document.getElementById("message_block");
+          message.scrollTop = message.scrollHeight;
+        }*/
+        function appendMessage(uname, msg){
+          $('#messages').append("<li class=\"right clearfix\"><span class=\"chat-img pull-right\"><img src=\"http://bootdey.com/img/Content/user_1.jpg\" alt=\"User Avatar\"></span><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\">"+uname+"</strong><small class=\"pull-right text-muted\"><i class=\"fa fa-clock-o\"></i> "+current_hour+":"+current_min+":"+current_sec+"</small></div><p>"+msg+" </p></div></li>");
+          var message = document.getElementById("message_block");
+          message.scrollTop = message.scrollHeight;
+        }
+        function appendState(msg){
+          $('#messages').append($('<li>').text(msg));
+          var message = document.getElementById("message_block");
+          message.scrollTop = message.scrollHeight;
+        }
+      });
+
+    </script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/"><strong>cFood</strong> <small>- Challenging Food System</small></a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="about">About</a>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="restaurant" class="dropdown-toggle" data-toggle="dropdown">Restaurant<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="/InstaUp">New Challenge</a>
+                            </li>
+                             <li>
+                                <a href="/search">Search</a>
+                            </li>
+                            <li>
+                                <a href="/location">Location</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Weekly Recommendation<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="/top_list">Top List</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/review">Review</a>
+                    </li>
+                    <li>
+                        <a href="/help">Help</a>
+                    </li>
+                    {{#if username}}
+                    <li class="dropdown">
+                        <a  href="#" class="dropdown-toggle" data-toggle="dropdown">{{username}}<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="/userInfo">My accout</a>
+                            </li>
+                             <li>
+                                <a href="/logout">Logout</a>
+                            </li>
+                        </ul>
+                    </li>
+                    {{else}}
+                            <li>
+                        <a href="/login"><span class="glyphicon glyphicon-user"></span>
+                          Login
+                        </a>
+                    </li>
+                    {{/if}}
+                </ul>
+            </div>
+        <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Header Carousel -->
+    <header id="myCarousel" class="carousel slide">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner">
+            <div class="item active">
+                <div class="fill" style="background-image:url('../img/1.jpg');"></div>
+                <div class="carousel-caption">
+                    <h2>Caption 1</h2>
+                </div>
+            </div>
+            <div class="item">
+                <div class="fill" style="background-image:url('../img/2.jpg');"></div>
+                <div class="carousel-caption">
+                    <h2>Caption 2</h2>
+                </div>
+            </div>
+            <div class="item">
+                <div class="fill" style="background-image:url('../img/3.jpg');"></div>
+                <div class="carousel-caption">
+                    <h2>Caption 3</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+            <span class="icon-prev"></span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+            <span class="icon-next"></span>
+        </a>
+    </header>
+
+        <div class="container">
+
+          {{#if sysMsg}}
+            <hr>
+            {{#if sysMsg.success}}
+              <div class="row">
+                <div class="alert alert-success">
+                  <strong>Success!</strong>{{sysMsg.content}}
+                </div>
+              </div>
+            {{else}}
+              <div class="row">
+                <div class="alert alert-danger">
+                  <strong>Warming!</strong>{{sysMsg.content}}
+                </div>
+              </div>
+            {{/if}}
+          {{/if}}
+
+        <!-- Marketing Icons Section -->
+        {{{ body }}}
+        <!-- /.row -->
+
+
+
+        <!-- /.row -->
+
+
+
+
+
+        <!-- Footer -->
+        <hr>
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; cFood 2016</p>
+                </div>
+            </div>
+        </footer>
+
+        </div>
+    <!-- /.container -->
+
+    <!-- jQuery -->
+    <script src="../js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../js/bootstrap.min.js"></script>
+
+    <!-- shorten js-->
+
+    <script type="text/javascript" src="../js/jquery.shorten.js"></script>
+
+    <!-- Script to Activate the Carousel -->
+    <script>
+    $('.carousel').carousel({
+        interval: 5000 //changes the speed
+    })
+    </script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+
+        $(".comment").shorten();
+
+    });
+    $(".comment").shorten({
+    "showChars" : 70
+    });
+    $(".comment").shorten({
+        "showChars" : 60,
+        "moreText"  : "See More",
+    });
+
+    $(".comment").shorten({
+        "showChars" : 60,
+        "moreText"  : "See More",
+        "lessText"  : "Less",
+    });
+    </script>
+
+
+</body>
