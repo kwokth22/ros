@@ -79,9 +79,9 @@
         {{#if username}}
           <div class="well">
               <h4>Leave a Comment:</h4>
-              <form role="form" method="POST" enctype="multipart/form-data">
+              <form role="form" method="POST" action="/restaurant" enctype="multipart/form-data">
                   <div class="form-group">
-                      <textarea class="form-control" rows="3" draggable="false" style="resize:none"></textarea>
+                      <textarea name="comment" id="comment" class="form-control" rows="3" draggable="false" style="resize:none"></textarea>
                   </div>
                   <button type="submit" class="btn btn-primary">Submit</button>
               </form>
