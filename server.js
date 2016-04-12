@@ -123,27 +123,75 @@ app.get('/restaurant/', function(request, response){
         response.status(500).end();
         return;
       }
-      var location;
-      if(itemDetail[0].latitude && itemDetail[0].longitude){
-        location = {
-          latitude: itemDetail[0].latitude,
-          longitude: itemDetail[0].longitude
-        };
-      }
-      response.render('restaurant', {
-        layout: 'layout',
-        username: request.session.user_id,
-        restName: itemDetail[0].Name,
-        restDescription: itemDetail[0].Description,
-        restImg: itemDetail[0].ImageSrc,
-        location: location
+
+      connection.query('SELECT * FROM  posts WHERE ItemID = ?', restID,function(error, postDetail){
+        if(error){
+          console.error(error);
+          response.status(500).end();
+          return;
+        }
+
+        for (var p in postDetail){
+          connection.query('SELECT username, avatar FROM user WHERE uid = ?', postDetail[p].uid, function(error, userInfo){
+            if(error){
+              console.error(error);
+              response.status(500).end();
+              return;
+            }
+
+          });
+        }
+
+        var location;
+        if(itemDetail[0].latitude && itemDetail[0].longitude){
+          location = {
+            latitude: itemDetail[0].latitude,
+            longitude: itemDetail[0].longitude
+          };
+        }
+        console.log(postDetail);
+        response.render('restaurant', {
+          layout: 'layout',
+          username: request.session.user_id,
+          itemID: itemDetail[0].ItemID,
+          restName: itemDetail[0].Name,
+          restDescription: itemDetail[0].Description,
+          restImg: itemDetail[0].ImageSrc,
+          location: location,
+          comment: postDetail
+        });
       });
+
     });
 });
 
 
 app.post('/restaurant',upload_avatar.single(), function(request, response){
-  console.log(util.inspect(request.body));
+  if(request.body.comment){
+    connection.query('SELECT uid FROM user WHERE username = ?', request.session.user_id, function(error, userInfo){
+      if(error){
+        console.log(error);
+        return;
+      }
+      console.log(userInfo);
+      var postData = {
+        uid: userInfo[0].uid,
+        ItemID: request.query.post,
+        comment: request.body.comment
+      };
+      connection.query('INSERT INTO posts SET date = now(), ?', postData, function(error, rows){
+        if(error){
+          console.log(error);
+          return;
+        }
+        response.redirect('/restaurant?rest='+request.query.post);
+      });
+    });
+
+
+  }else if (request.body.rating) {
+
+  }
 });
 
 app.get('/InstaUp', function(request, response){
