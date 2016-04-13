@@ -132,27 +132,33 @@ app.get('/restaurant/', function(request, response){
           response.status(500).end();
           return;
         }
-        var location;
-        if(itemDetail[0].latitude && itemDetail[0].longitude){
-          location = {
-            latitude: itemDetail[0].latitude,
-            longitude: itemDetail[0].longitude
-          };
-        }
+        connection.query('SELECT * FROM items WHERE foodtype = ? AND ItemID <> ? LIMIT 3', [itemDetail[0].foodtype, itemDetail[0].ItemID], function(error, recomInfo){
+          if(error){
+            console.error(error+"in foodtype");
+            response.status(500).end();
+          }
+          var location;
+          if(itemDetail[0].latitude && itemDetail[0].longitude){
+            location = {
+              latitude: itemDetail[0].latitude,
+              longitude: itemDetail[0].longitude
+            };
+          }
 
-        response.render('restaurant', {
-          layout: 'layout',
-          username: request.session.user_id,
-          itemID: itemDetail[0].ItemID,
-          restName: itemDetail[0].Name,
-          restDescription: itemDetail[0].Description,
-          restImg: itemDetail[0].ImageSrc,
-          location: location,
-          comment: postDetail,
-          rating: itemDetail[0].averagerating.toPrecision(3)
+          response.render('restaurant', {
+            layout: 'layout',
+            username: request.session.user_id,
+            itemID: itemDetail[0].ItemID,
+            restName: itemDetail[0].Name,
+            restDescription: itemDetail[0].Description,
+            restImg: itemDetail[0].ImageSrc,
+            location: location,
+            comment: postDetail,
+            rating: itemDetail[0].averagerating.toPrecision(3),
+            recommend: recomInfo
+          });
         });
       });
-
     });
 });
 
@@ -246,7 +252,6 @@ app.post('/InstaUp',upload_foodpic.single('uploadphoto'), function(request, resp
       console.log(error);
       response.status(500).end();
     }else {
-      //console.log("Success");
       response.redirect('/');
     }
   });

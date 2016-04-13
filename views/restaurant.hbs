@@ -135,7 +135,10 @@
         <!-- Side Widget Well -->
         <div class="well">
             <h4>Related Recommendation</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, perspiciatis adipisci accusamus laudantium odit aliquam repellat tempore quos aspernatur vero.</p>
+            {{#each recommend}}
+            <p><img src="{{this.ImageSrc}}" class="img-rounded" alt="Cinque Terre" width="304" height="236"></p>
+            <a href="/restaurant?rest={{this.ItemID}}">{{this.Name}}</a>
+            {{/each}}
         </div>
 
     </div>
