@@ -451,7 +451,7 @@ app.post('/login',upload_avatar.single(), function(request, response){
 });
 
 app.get('/accountInfo', function(request, response){
-  request.render('accountinfo', {
+  response.render('accountinfo', {
     layout: 'layout',
     username: request.session.user_id
   });
