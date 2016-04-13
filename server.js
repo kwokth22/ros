@@ -307,7 +307,8 @@ app.get('/search', function(request, response){
   }else{
     response.render('search',{
       layout: 'layout',
-      username: request.session.user_id
+      username: request.session.user_id,
+      NotSearch: false
     });
   }
 });
