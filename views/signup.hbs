@@ -29,7 +29,7 @@
             <label for="avatar">Avatar</label>
             <input name="avatar" type="file">
           </div>
-           <button type="submit" class="btn btn-default" >Sign up</button>
+           <div id="submit" style="display:none"> <button  type="submit" class="btn btn-default" >Sign up</button> </div>
         </form>
 
     </div>
@@ -41,11 +41,13 @@
       var password = $("#password").val();
       var confirmPassword = $("#txtconfirmPassword").val();
       if (password != confirmPassword){
+          $("#submit").hide();
           $("#divCheckPasswordMatch").show("show");
           $("#divCheckPasswordMatch").html("Passwords do not match!");
         }
       else{
           $("#divCheckPasswordMatch2").show("show");
+          $("#submit").show("show");
           $("#divCheckPasswordMatch2").html("Passwords match.");
         }
         $("#divCheckPasswordMatch").fadeOut(4000);
