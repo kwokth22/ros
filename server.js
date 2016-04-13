@@ -211,7 +211,8 @@ app.post('/restaurant',upload_avatar.single(), function(request, response){
 app.get('/InstaUp', function(request, response){
   if(request.session.user_id){
     response.render('InstaUp', {
-      layout: 'layout'
+      layout: 'layout',
+      username: request.session.user_id
     });
   }else{
     request.session.sysMsg = {
@@ -279,7 +280,8 @@ app.get('/login', function(request, response){
 
 app.get('/about', function(request, response){
   response.render('about',{
-    layout: 'layout'
+    layout: 'layout',
+    username: request.session.user_id
   });
 });
 
@@ -304,7 +306,8 @@ app.get('/search', function(request, response){
     }
   }else{
     response.render('search',{
-      layout: 'layout'
+      layout: 'layout',
+      username: request.session.user_id
     });
   }
 });
@@ -321,7 +324,23 @@ app.post('/search', upload_foodpic.single(), function(request, response){
     console.log(result);
     response.render('search', {
       layout: 'layout',
-      searchResult: result
+      searchResult: result,
+      username: request.session.user_id
+    });
+  });
+});
+
+app.get('/topCha', function(request, response){
+  connection.query("SELECT * FROM items ORDER BY averagerating DESC LIMIT 5",function(error, topchall){
+    if(error){
+      console.log(error);
+      response.status(500).end();
+      return;
+    }
+    response.render('topchall', {
+      layout: 'layout',
+      chall: topchall,
+      username: request.session.user_id
     });
   });
 });
@@ -338,6 +357,7 @@ app.get('/instantchat', function(request, response){
       console.log(avatar[0].avatar);
       response.render('instantchat', {
         layout: 'layout3',
+        username: request.session.user_id,
         user: {
           username: request.session.user_id,
           avatar: avatar[0].avatar
@@ -430,6 +450,12 @@ app.post('/login',upload_avatar.single(), function(request, response){
   });
 });
 
+app.get('/accountInfo', function(request, response){
+  request.render('accountinfo', {
+    layout: 'layout',
+    username: request.session.user_id
+  });
+});
 
 // handling registeration
 app.get('/signup/', function(request, response){
