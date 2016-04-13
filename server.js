@@ -257,15 +257,18 @@ app.get('/about', function(request, response){
 
 app.get('/search', function(request, response){
   if(request.query.action){
-    connection.query("SELECT name FROM items", function(error, rows, field){
-      if(error){
-        throw error;
-      }
-
-      response.writeHead(200, {'Content-Type': 'text/plain'});
-      response.write(JSON.stringify(rows));
-      response.end();
-    });
+    console.log('Requesting the data json');
+    response.sendFile(__dirname+"/data.json");
+    // response.end();
+    // connection.query("SELECT name FROM items", function(error, rows, field){
+    //   if(error){
+    //     throw error;
+    //   }
+    //
+    //   response.writeHead(200, {'Content-Type': 'text/plain'});
+    //   response.write(JSON.stringify(rows));
+    //   response.end();
+    // });
   }else{
     response.render('search',{
       layout: 'layout'

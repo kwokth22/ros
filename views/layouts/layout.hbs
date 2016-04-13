@@ -185,27 +185,26 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="../js/bootstrap.min.js"></script>
-    <script src="../js/typeahead.bundle.js"></script>
+
     <!-- shorten js-->
 
     <script type="text/javascript" src="../js/jquery.shorten.js"></script>
 
+    <script src="../js/typeahead.bundle.js"></script>
     <script type="text/javascript">
     var foodname = new Bloodhound({
-      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+      datumTokenizer: Bloodhound.tokenizers.whitespace,
       queryTokenizer: Bloodhound.tokenizers.whitespace,
-      prefetch: {
-          url: '/search?action=true'+'.json'
-        }
+      prefetch: '/search?action=true'
     });
 
-    $('#remote .typeahead').typeahead(null, {
-      name: 'best-pictures',
-      display: 'value',
+    $('#prefetch .typeahead').typeahead(null, {
+      name: 'foodname',
       source: foodname
     });
 
     </script>
+
 
     <!-- Script to Activate the Carousel -->
     <script>
