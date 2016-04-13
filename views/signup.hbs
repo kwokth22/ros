@@ -7,19 +7,23 @@
         <form  id="signupform" name="signupform" ref='uploadForm' action="/signup" method="POST" encType="multipart/form-data">
           <div class="form-group">
             <label for="exampleInputEmail1">User name</label>
-            <input name="username" type="text" class="form-control"  placeholder="E.g. jacky2283">
+            <input name="username" type="text" class="form-control"  placeholder="E.g. jacky2283" required>
           </div>
           <div class="form-group">
             <label for="exampleInputEmail1">Name</label>
-            <input id="name" name="name" type="text" class="form-control" placeholder="E.g. Jacky Chan">
+            <input id="name" name="name" type="text" class="form-control" placeholder="E.g. Jacky Chan" required>
           </div>
           <div class="form-group">
             <label for="exampleInputPassword1">Password</label>
-            <input name="password" id="password" type="password" class="form-control" placeholder="Password">
+            <input  name="password" id="password" type="password" class="form-control" placeholder="Password" required>
           </div>
           <div class="form-group">
             <label for="exampleInputPassword1">Retype password</label>
-            <input name="txtconfirmPassword" id="txtconfirmPassword" type="password" class="form-control"  placeholder="Password" onChange="checkPasswordMatch();">
+            <input name="txtconfirmPassword" id="txtconfirmPassword" type="password" class="form-control"  placeholder="Password" onChange="checkPasswordMatch();" required>
+          </div>
+          <div class="form-group">
+            <div id="divCheckPasswordMatch2" class="alert alert-success" style="display:none"></div>
+           <div id="divCheckPasswordMatch" class="alert alert-danger" style="display:none"></div>
           </div>
           <div class="form-group">
             <label for="avatar">Avatar</label>
@@ -27,7 +31,7 @@
           </div>
            <button type="submit" class="btn btn-default" >Sign up</button>
         </form>
-       <div id="divCheckPasswordMatch" class="alert alert-danger"></div>
+
     </div>
 
 </div>
@@ -36,12 +40,18 @@
     function checkPasswordMatch() {
       var password = $("#password").val();
       var confirmPassword = $("#txtconfirmPassword").val();
-
-      if (password != confirmPassword)
+      if (password != confirmPassword){
+          $("#divCheckPasswordMatch").show("show");
           $("#divCheckPasswordMatch").html("Passwords do not match!");
-      else
-          $("#divCheckPasswordMatch").html("Passwords match.");
+        }
+      else{
+          $("#divCheckPasswordMatch2").show("show");
+          $("#divCheckPasswordMatch2").html("Passwords match.");
+        }
+        $("#divCheckPasswordMatch").fadeOut(4000);
+        $("#divCheckPasswordMatch2").fadeOut(5000);
     }
+
 
     $(document).ready(function () {
      $("#txtConfirmPassword").keyup(checkPasswordMatch);
