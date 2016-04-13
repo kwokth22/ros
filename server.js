@@ -220,22 +220,34 @@ app.post('/InstaUp',upload_foodpic.single('uploadphoto'), function(request, resp
   console.log(util.inspect(request.body));
   console.log(util.inspect(request.file));
   var ImageSrc = "../"+request.file.path;
-  var newitems = {
-    Name: request.body.foodname,
-    restaurantname: request.body.restaurantname,
-    foodtype: request.body.foodtype,
-    latitude: request.body.latitude,
-    longitude: request.body.longitude,
-    Description: request.body.description,
-    ImageSrc: ImageSrc
-  };
+  if(request.body.latitude && request.body.longitude){
+    var newitems = {
+      Name: request.body.foodname,
+      restaurantname: request.body.restaurantname,
+      foodtype: request.body.foodtype,
+      latitude: request.body.latitude,
+      longitude: request.body.longitude,
+      Description: request.body.description,
+      ImageSrc: ImageSrc
+    };
+  }else{
+    var newitems = {
+      Name: request.body.foodname,
+      restaurantname: request.body.restaurantname,
+      foodtype: request.body.foodtype,
+      Description: request.body.description,
+      ImageSrc: ImageSrc
+    };
+  }
+
   connection.query("INSERT INTO items set ?", newitems, function(error, result){
     if(error){
+      console.log(error);
       response.status(500).end();
     }else {
-      response.redirect("/");
+      console.log("Success");
+      response.redirect('/');
     }
-
   });
 });
 
