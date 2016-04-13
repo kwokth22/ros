@@ -201,9 +201,17 @@ app.post('/restaurant',upload_avatar.single(), function(request, response){
 });
 
 app.get('/InstaUp', function(request, response){
-  response.render('InstaUp', {
-    layout: 'layout2'
-  });
+  if(request.session.user_id){
+    response.render('InstaUp', {
+      layout: 'layout'
+    });
+  }else{
+    request.session.sysMsg = {
+        success: false,
+        content: "You have to login in order to upload new challenges"};
+    response.redirect('/');
+  }
+
 });
 
 app.post('/InstaUp',upload_foodpic.single('uploadphoto'), function(request, response){
@@ -256,19 +264,24 @@ app.get('/about', function(request, response){
 });
 
 app.get('/search', function(request, response){
-  if(request.query.action){
-    console.log('Requesting the data json');
-    response.sendFile(__dirname+"/data.json");
-    // response.end();
-    // connection.query("SELECT name FROM items", function(error, rows, field){
-    //   if(error){
-    //     throw error;
-    //   }
-    //
-    //   response.writeHead(200, {'Content-Type': 'text/plain'});
-    //   response.write(JSON.stringify(rows));
-    //   response.end();
-    // });
+  if(request.query.data){
+    if(request.query.data=="restaurantname"){
+      connection.query("SELECT restaurantname FROM items",function(error, rows, field){
+        if(error){
+          console.log(error);
+          return;
+        }
+        response.send(JSON.stringify(rows));
+      });
+    }else{
+      connection.query("SELECT name FROM items",function(error, rows, field){
+        if(error){
+          console.log(error);
+          return;
+        }
+        response.send(JSON.stringify(rows));
+      });
+    }
   }else{
     response.render('search',{
       layout: 'layout'
@@ -368,7 +381,7 @@ app.get('/signup/', function(request, response){
 app.post('/signup', upload_avatar.single('avatar'), function (request, response) {
   console.log("A user has signed up");
   //console.log(util.inspect(request.file));
-  if(typeof request.file !== 'underfined'){
+  if(request.file){
     var srcPath = "../"+request.file.path;
   }else{
     var srcPath = "../img/default.jpg";

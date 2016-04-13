@@ -51,25 +51,12 @@
                              <li>
                                 <a href="/search">Search</a>
                             </li>
-                            <li>
-                                <a href="/location">Location</a>
-                            </li>
                         </ul>
                     </li>
-    				<li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Weekly Recommendation<b class="caret"></b></a>
-    					<ul class="dropdown-menu">
-    						<li>
-                                <a href="/top_list">Top List</a>
-                            </li>
-    					</ul>
-                    </li>
-                    <li>
-                        <a href="/review">Review</a>
-                    </li>
     				<li>
-                        <a href="/help">Help</a>
-                    </li>
+                        <a href="/topCha" >Top Challenge</a>
+            </li>
+
                     {{#if username}}
                     <li class="dropdown">
                         <a  href="#" class="dropdown-toggle" data-toggle="dropdown">{{username}}<b class="caret"></b></a>
@@ -77,9 +64,13 @@
                             <li>
                                 <a href="/userInfo">My accout</a>
                             </li>
+                            <li>
+                              <a href="/instantchat">InstaChat</a>
+                            </li>
                              <li>
                                 <a href="/logout">Logout</a>
                             </li>
+
                         </ul>
                     </li>
                     {{else}}
@@ -192,15 +183,32 @@
 
     <script src="../js/typeahead.bundle.js"></script>
     <script type="text/javascript">
-    var foodname = new Bloodhound({
-      datumTokenizer: Bloodhound.tokenizers.whitespace,
+    var restName = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace("restaurantname"),
       queryTokenizer: Bloodhound.tokenizers.whitespace,
-      prefetch: '/search?action=true'
+      prefetch: {
+        url: '/search?data=restaurantname',
+        ttl: 30000
+      }
     });
 
-    $('#prefetch .typeahead').typeahead(null, {
+    var foodName = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace("name"),
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      prefetch: {
+      url: '/search?data=name',
+      ttl: 30000
+    }
+  });
+
+    $('#prefetch .typeahead').typeahead({highlight: true}, {
       name: 'foodname',
-      source: foodname
+      displayKey: "name",
+      source: foodName
+    },{
+      name: 'restaurantname',
+      displayKey: 'restaurantname',
+      source: restName
     });
 
     </script>
