@@ -16,85 +16,12 @@
 
     <!-- Custom CSS -->
     <link href="../css/modern-business.css" rel="stylesheet">
-
+    <!-- Custom CSS -->
+    <link href="../css/instachat.css" rel="stylesheet">
     <!-- Custom Fonts -->
     <link href="../font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
 
-      #messages li:nth-child(odd) {
-        background: #eee;
-      }
-
-
-    .time
-    {
-        color:#bfbfbf;
-    }
-
-
-
-    .send-message
-    {
-        resize: none;
-    }
-
-    .highlight
-    {
-        background-color: #f7f7f9;
-        border: 1px solid #e1e1e8;
-    }
-
-
-    .msg-wrap .media-heading
-    {
-        color:#003bb3;
-        font-weight: 700;
-    }
-
-
-    .msg-date
-    {
-        background: none;
-        text-align: center;
-        color:#aaa;
-        border:none;
-        box-shadow: none;
-        border-bottom: 1px solid #ddd;
-    }
-
-
-    body::-webkit-scrollbar {
-        width: 12px;
-    }
-
-
-    /* Let's get this party started */
-    ::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    /* Track */
-    ::-webkit-scrollbar-track {
-        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-/*        -webkit-border-radius: 10px;
-        border-radius: 10px;*/
-    }
-
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-/*        -webkit-border-radius: 10px;
-        border-radius: 10px;*/
-        background:#ddd;
-        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-    }
-    ::-webkit-scrollbar-thumb:window-inactive {
-        background: #ddd;
-    }
-
-    </style>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
@@ -189,39 +116,30 @@
                              <li>
                                 <a href="/search">Search</a>
                             </li>
-                            <li>
-                                <a href="/location">Location</a>
-                            </li>
                         </ul>
                     </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Weekly Recommendation<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="/top_list">Top List</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="/review">Review</a>
-                    </li>
-                    <li>
-                        <a href="/help">Help</a>
-                    </li>
+    				<li>
+                        <a href="/topCha" >Top Challenge</a>
+            </li>
+
                     {{#if username}}
                     <li class="dropdown">
                         <a  href="#" class="dropdown-toggle" data-toggle="dropdown">{{username}}<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="/userInfo">My accout</a>
+                                <a href="/userInfo">My account</a>
+                            </li>
+                            <li>
+                              <a href="/instantchat">InstaChat</a>
                             </li>
                              <li>
                                 <a href="/logout">Logout</a>
                             </li>
+
                         </ul>
                     </li>
                     {{else}}
-                            <li>
+    				        <li>
                         <a href="/login"><span class="glyphicon glyphicon-user"></span>
                           Login
                         </a>
@@ -327,6 +245,39 @@
     <!-- shorten js-->
 
     <script type="text/javascript" src="../js/jquery.shorten.js"></script>
+
+    <script src="../js/typeahead.bundle.js"></script>
+    <script type="text/javascript">
+    var restName = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace("restaurantname"),
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      prefetch: {
+        url: '/search?data=restaurantname',
+        ttl: 30000
+      }
+    });
+
+    var foodName = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace("name"),
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      prefetch: {
+      url: '/search?data=name',
+      ttl: 30000
+    }
+  });
+
+    $('#prefetch .typeahead').typeahead({highlight: true}, {
+      name: 'foodname',
+      displayKey: "name",
+      source: foodName
+    },{
+      name: 'restaurantname',
+      displayKey: 'restaurantname',
+      source: restName
+    });
+
+    </script>
+
 
     <!-- Script to Activate the Carousel -->
     <script>
