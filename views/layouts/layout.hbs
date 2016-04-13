@@ -180,7 +180,7 @@
     <!-- shorten js-->
 
     <script type="text/javascript" src="../js/jquery.shorten.js"></script>
-
+    <script src="../js/handlebars.js"></script>
     <script src="../js/typeahead.bundle.js"></script>
     <script type="text/javascript">
     var restName = new Bloodhound({
@@ -204,11 +204,17 @@
     $('#prefetch .typeahead').typeahead({highlight: true}, {
       name: 'foodname',
       displayKey: "name",
-      source: foodName
+      source: foodName,
+      templates: {
+          suggestion: Handlebars.compile('<div><h1>{{name}}</h1></div>')
+        }
     },{
       name: 'restaurantname',
       displayKey: 'restaurantname',
-      source: restName
+      source: restName,
+      templates: {
+          suggestion: Handlebars.compile('<div><h1>{{restaurantname}}</h1></div>')
+        }
     });
 
     </script>
