@@ -294,10 +294,35 @@ app.get('/search', function(request, response){
 
 app.get('/instantchat', function(request, response){
   //response.sendFile(__dirname+'/client/chatroom.html');
-  response.render('instantchat',{
-    layout: 'layout3',
-    username: request.session.user_id 
-  });
+  console.log("User: "+request.session.user_id);
+  if(request.session.user_id){
+    connection.query("SELECT avatar FROM user WHERE username = ?", request.session.user_id, function(error, avatar){
+      if(error){
+        console.log(error);
+        return;
+      }
+      console.log(avatar[0].avatar);
+      response.render('instantchat', {
+        layout: 'layout3',
+        user: {
+          username: request.session.user_id,
+          avatar: avatar[0].avatar
+        }
+      });
+    });
+  }else{
+    request.session.sysMsg = {
+        success: true,
+        content: login_info.username+" Login Successfully"
+      }
+    response.redirect("/");
+  }
+  // response.render('instantchat',{
+  //   layout: 'layout3',
+  //   user: {
+  //     name: request.session.
+  //   }
+  // });
 });
 
 var userCnt = 0;
