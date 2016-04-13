@@ -3,6 +3,7 @@ var util = require('util'); // debug
 var express = require('express');
 var path = require("path");
 var exphbs = require('express-handlebars');
+
 var mysql = require('mysql');
 var session = require('express-session');
 
@@ -16,6 +17,7 @@ var localStrategy = require('passport-local').Strategy;
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+
 
 
 
@@ -293,7 +295,8 @@ app.get('/search', function(request, response){
 app.get('/instantchat', function(request, response){
   //response.sendFile(__dirname+'/client/chatroom.html');
   response.render('instantchat',{
-    layout: 'layout3'
+    layout: 'layout3',
+    username: request.session.user_id 
   });
 });
 
