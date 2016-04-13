@@ -21,7 +21,7 @@ $(document).ready(function(){
       <input class="typeahead" type="text" placeholder="Oscar winners for Best Picture">
     </div> -->
     <div class="col-lg-8">
-        <h2>Custom search field</h2>
+        <h2>Looking for challenges ?</h2>
         <div id="prefetch">
           <div class="input-group col-md-12">
             <form id="search" name="search" action="/search" method="POST" enctype="multipart/form-data">
@@ -41,6 +41,10 @@ $(document).ready(function(){
         </div>
   </div>
 </div>
+  {{#if searchResult}}
+    <div class=".col-md-8">
+      <h3>There are <b>{{searchResult.length}}</b> matched result/results found.</h3>
+    </div>
 
   {{#each searchResult}}
   <hr>
@@ -55,4 +59,10 @@ $(document).ready(function(){
       </div>
     </div>
   {{/each}}
+
+  {{else}}
+    <div class=".col-md-8">
+      <h3>There is <b>0</b> matched result/results found.</h3>
+    </div>
+  {{/if}}
 </div>
