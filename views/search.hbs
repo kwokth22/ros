@@ -24,10 +24,10 @@ $(document).ready(function(){
         <h2>Custom search field</h2>
         <div id="prefetch">
           <div class="input-group col-md-12">
-            <form>
+            <form id="search" name="search" action="/search" method="POST" enctype="multipart/form-data">
             <fieldset>
             <div class="form-group">
-              <input  class="form-control typeahead" type="text" name="query" id="query" placeholder="Restaurant Name, Type" />
+              <input  class="form-control typeahead" type="text" name="query" id="query" placeholder="Food Name/Restaurant Name" />
               </div>
               <span class="input-group-btn">
               <button class="btn btn-primary" type="submit">
@@ -39,13 +39,20 @@ $(document).ready(function(){
           </div>
 
         </div>
+  </div>
+</div>
+
+  {{#each searchResult}}
+  <hr>
+    <div class=".col-md-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4><b>    {{this.Name}}</b></h4>
+        </div>
+        <div class="panel-body">
+          <p><a href="/restaurant?rest={{this.ItemID}}"><img src="{{this.ImageSrc}}" class="img-rounded" width="304" height="236"></a></p>
+        </div>
+      </div>
     </div>
-
-
-
-    <div class="col-lg-8" >
-      <!-- result-->
-    </div>
-
-
+  {{/each}}
 </div>

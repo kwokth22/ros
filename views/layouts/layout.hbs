@@ -204,19 +204,13 @@
     $('#prefetch .typeahead').typeahead({highlight: true}, {
       name: 'foodname',
       displayKey: "name",
-      source: foodName,
-      templates: {
-          suggestion: Handlebars.compile('<div><h1>{{name}}</h1></div>')
-        }
+      source: foodName
     },{
       name: 'restaurantname',
       displayKey: 'restaurantname',
-      source: restName,
-      templates: {
-          suggestion: Handlebars.compile('<div><h1>{{restaurantname}}</h1></div>')
-        }
+      source: restName
     });
-
+    $('#dropdown').css('background-color','#FFF');
     </script>
 
 

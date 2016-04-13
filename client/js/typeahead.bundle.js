@@ -1102,7 +1102,7 @@
         function buildHtml(c) {
             return {
                 wrapper: '<span class="' + c.wrapper + '"></span>',
-                menu: '<div class="' + c.menu + '"></div>'
+                menu: '<div id="dropdown" class="' + c.menu + '"></div>'
             };
         }
         function buildSelectors(classes) {

@@ -307,7 +307,23 @@ app.get('/search', function(request, response){
       layout: 'layout'
     });
   }
+});
 
+app.post('/search', upload_foodpic.single(), function(request, response){
+  var str = request.body.query;
+  var searchBody = str.toLowerCase();
+  console.log(searchBody);
+  connection.query("SELECT * FROM items WHERE LOWER(Name) LIKE ? OR LOWER(restaurantname) LIKE ?", ["%"+searchBody+"%", "%"+searchBody+"%"], function(error, result){
+    if(error){
+      console.log(error);
+      return;
+    }
+    console.log(result);
+    response.render('search', {
+      layout: 'layout',
+      searchResult: result
+    });
+  });
 });
 
 app.get('/instantchat', function(request, response){
