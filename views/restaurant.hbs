@@ -49,8 +49,8 @@
                     {{this.Name}}:  {{this.Description}}
                 </p>
         {{/if}}
-
-
+        <hr>
+          <h3>Rating: {{rating}}</h3>
         <hr>
 
         <!-- Where to eat-->
@@ -116,7 +116,7 @@
             <p>
             (1: boring<span class="glyphicon glyphicon-trash"></span> -  5: Most challenging<span class="glyphicon glyphicon-fire"></span> )</h4></p>
             <!--change action-->
-            <form id="rating" name="rating" action="/restaurant/?rating=true" method="POST" enctype="multipart/form-data">
+            <form id="rating" name="rating" action="/restaurant?rating={{itemID}}" method="POST" enctype="multipart/form-data">
             <select name="rating" id="rating" class="form-control">
               <option value="1">1</option>
               <option value="2">2</option>

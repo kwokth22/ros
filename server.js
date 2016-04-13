@@ -12,7 +12,7 @@ var fs = require('fs');
 var multer = require('multer');
 var passport = require('passport');
 var localStrategy = require('passport-local').Strategy;
-var merge = require('merge');
+
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -146,7 +146,8 @@ app.get('/restaurant/', function(request, response){
           restDescription: itemDetail[0].Description,
           restImg: itemDetail[0].ImageSrc,
           location: location,
-          comment: postDetail
+          comment: postDetail,
+          rating: itemDetail[0].averagerating.toPrecision(3)
         });
       });
 
@@ -175,10 +176,27 @@ app.post('/restaurant',upload_avatar.single(), function(request, response){
         response.redirect('/restaurant?rest='+request.query.post);
       });
     });
-
-
   }else if (request.body.rating) {
-
+    connection.query('SELECT ratednum, averagerating FROM items WHERE ItemID =?', request.query.rating, function(error, ratingRow){
+      if(error){
+        console.log(error);
+        return;
+      }
+      var currentRating = ratingRow[0].averagerating;
+      var newRatedNum = ratingRow[0].ratednum+1;
+      var newRating = ((currentRating*(ratingRow[0].ratednum) + Number(request.body.rating))/newRatedNum).toPrecision(5);
+      var updated = {
+        ratednum: newRatedNum,
+        averagerating : newRating
+      };
+      connection.query('UPDATE items SET ? WHERE ItemID = ?', [updated,request.query.rating], function(error, result){
+        if(error){
+          console.log(error);
+          return;
+        }
+        response.redirect('/restaurant?rest='+request.query.rating);
+      });
+    });
   }
 });
 
