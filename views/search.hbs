@@ -5,7 +5,7 @@ $(document).ready(function(){
   });
 }); -->
 <!-- Page Content -->
-
+<link href="../css/search.css" rel="stylesheet">
 
 
 
@@ -25,12 +25,18 @@ $(document).ready(function(){
         <div id="prefetch">
 
           <div class="input-group col-md-12">
-            <input  class="form-control typeahead" type="text" placeholder="Restaurant Name, Type" />
-            <span class="input-group-btn">
-            <button class="btn btn-info btn-lg" type="submit">
-                <i class="glyphicon glyphicon-search"></i>
-            </button>
-          </span>
+            <form>
+            <fieldset>
+            <div class="form-group">
+              <input  class="form-control typeahead" type="text" name="query" id="query" placeholder="Restaurant Name, Type" />
+              </div>
+              <span class="input-group-btn">
+              <button class="btn btn-primary" type="submit">
+                  <i class="glyphicon glyphicon-search"></i>
+              </button>
+              </span>
+            </fieldset>
+          </form>
           </div>
 
         </div>
