@@ -381,7 +381,7 @@ app.get('/signup/', function(request, response){
 app.post('/signup', upload_avatar.single('avatar'), function (request, response) {
   console.log("A user has signed up");
   //console.log(util.inspect(request.file));
-  if(typeof request.file !== 'underfined'){
+  if(request.file){
     var srcPath = "../"+request.file.path;
   }else{
     var srcPath = "../img/default.jpg";
