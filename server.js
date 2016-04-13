@@ -452,10 +452,68 @@ app.post('/login',upload_avatar.single(), function(request, response){
 });
 
 app.get('/accountInfo', function(request, response){
-  response.render('accountinfo', {
-    layout: 'layout',
-    username: request.session.user_id
-  });
+  if(request.session.user_id){
+    connection.query("SELECT avatar FROM user WHERE username = ?", request.session.user_id, function(error, avatar){
+      if(error){
+        console.log(error);
+        return;
+      }
+      response.render('accountinfo', {
+        layout: 'layout',
+        sysMsg: request.session.sysMsg,
+        username: request.session.user_id,
+        avatar: avatar[0].avatar
+      });
+      delete request.session.sysMsg;
+    });
+  }else{
+    request.session.sysMsg = {
+      success: false,
+      content: "Your are not authorized to see this page"
+    };
+    response.redirect('/');
+  }
+});
+
+app.post('/accountinfo',upload_avatar.single('updateavatar'),function(request, response){
+  if(request.session.user_id){
+    if(request.query.q=="pw"){
+      var newPW = request.body.password;
+      var username = request.session.user_id;
+      console.log(newPW);
+      connection.query("UPDATE user SET pw = ? WHERE username = ?", [newPW, username], function(error, result){
+        if(error){
+          console.log(error);
+          return;
+        }
+        request.session.sysMsg = {
+          success: true,
+          content: "Your password has been updated!"
+        }
+        response.redirect('/accountinfo');
+      });
+    }else if (request.query.q=="av") {
+      var newAva = path.normalize("../"+request.file.path);
+      var username = request.session.user_id;
+      console.log(newAva);
+      connection.query("UPDATE user SET avatar = ? WHERE username = ?", [newAva, username], function(error, result){
+        if(error){
+          console.log(error);
+          return;
+        }
+        request.session.sysMsg = {
+          success: true,
+          content: "Your avatar has been updated!"
+        }
+        response.redirect('/accountinfo');
+      });
+    }else{
+      response.send("<h3>FUCK YOU</h3>");
+    }
+  }else{
+    response.send("<h3>FUCK YOU</h3>");
+  }
+
 });
 
 // handling registeration
