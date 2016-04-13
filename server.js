@@ -217,9 +217,10 @@ app.get('/InstaUp', function(request, response){
 });
 
 app.post('/InstaUp',upload_foodpic.single('uploadphoto'), function(request, response){
-  console.log(util.inspect(request.body));
-  console.log(util.inspect(request.file));
-  var ImageSrc = "../"+request.file.path;
+  //console.log(util.inspect(request.body));
+  //console.log(util.inspect(request.file));
+  var ImageSrc =path.normalize( "../"+request.file.path);
+  //console.log("Image src: "+ImageSrc);
   if(request.body.latitude && request.body.longitude){
     var newitems = {
       Name: request.body.foodname,
@@ -245,7 +246,7 @@ app.post('/InstaUp',upload_foodpic.single('uploadphoto'), function(request, resp
       console.log(error);
       response.status(500).end();
     }else {
-      console.log("Success");
+      //console.log("Success");
       response.redirect('/');
     }
   });
