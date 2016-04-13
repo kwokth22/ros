@@ -94,7 +94,7 @@ app.get('/', function(request, response){
       response.status(500).end();
       return;
     }
-    console.log(util.inspect(request.session.sysMsg));
+    //console.log(util.inspect(request.session.sysMsg));
 
     if(request.session){
       response.render('index',{
@@ -256,10 +256,22 @@ app.get('/about', function(request, response){
 });
 
 app.get('/search', function(request, response){
+  if(request.query.action){
+    connection.query("SELECT name FROM items", function(error, rows, field){
+      if(error){
+        throw error;
+      }
 
-  response.render('search',{
-    layout: 'layout'
-  });
+      response.writeHead(200, {'Content-Type': 'text/plain'});
+      response.write(JSON.stringify(rows));
+      response.end();
+    });
+  }else{
+    response.render('search',{
+      layout: 'layout'
+    });
+  }
+
 });
 
 app.get('/instantchat', function(request, response){
@@ -352,11 +364,11 @@ app.get('/signup/', function(request, response){
 
 app.post('/signup', upload_avatar.single('avatar'), function (request, response) {
   console.log("A user has signed up");
-  console.log(util.inspect(request.file));
+  //console.log(util.inspect(request.file));
   if(typeof request.file !== 'underfined'){
-    var srcPath = "../img/default.jpg";
-  }else{
     var srcPath = "../"+request.file.path;
+  }else{
+    var srcPath = "../img/default.jpg";
   }
   connection.query('SELECT username FROM user where username = ?',request.body.username, function(error, rows){
     if(error){
