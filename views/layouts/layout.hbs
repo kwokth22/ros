@@ -192,15 +192,32 @@
 
     <script src="../js/typeahead.bundle.js"></script>
     <script type="text/javascript">
-    var foodname = new Bloodhound({
-      datumTokenizer: Bloodhound.tokenizers.whitespace,
+    var restName = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace("restaurantname"),
       queryTokenizer: Bloodhound.tokenizers.whitespace,
-      prefetch: '/search?action=true'
+      prefetch: {
+        url: '/search?data=restaurantname',
+        ttl: 30000
+      }
     });
 
-    $('#prefetch .typeahead').typeahead(null, {
+    var foodName = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace("name"),
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      prefetch: {
+      url: '/search?data=name',
+      ttl: 30000
+    }
+  });
+
+    $('#prefetch .typeahead').typeahead({highlight: true}, {
       name: 'foodname',
-      source: foodname
+      displayKey: "name",
+      source: foodName
+    },{
+      name: 'restaurantname',
+      displayKey: 'restaurantname',
+      source: restName
     });
 
     </script>
