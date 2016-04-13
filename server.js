@@ -12,7 +12,7 @@ var fs = require('fs');
 var multer = require('multer');
 var passport = require('passport');
 var localStrategy = require('passport-local').Strategy;
-
+var merge = require('merge');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -124,24 +124,12 @@ app.get('/restaurant/', function(request, response){
         return;
       }
 
-      connection.query('SELECT * FROM  posts WHERE ItemID = ?', restID,function(error, postDetail){
+      connection.query('SELECT posts.*, user.* FROM  posts, user WHERE ItemID = ? and posts.uid= user.uid', restID,function(error, postDetail){
         if(error){
           console.error(error);
           response.status(500).end();
           return;
         }
-
-        for (var p in postDetail){
-          connection.query('SELECT username, avatar FROM user WHERE uid = ?', postDetail[p].uid, function(error, userInfo){
-            if(error){
-              console.error(error);
-              response.status(500).end();
-              return;
-            }
-
-          });
-        }
-
         var location;
         if(itemDetail[0].latitude && itemDetail[0].longitude){
           location = {
@@ -149,7 +137,7 @@ app.get('/restaurant/', function(request, response){
             longitude: itemDetail[0].longitude
           };
         }
-        console.log(postDetail);
+
         response.render('restaurant', {
           layout: 'layout',
           username: request.session.user_id,
