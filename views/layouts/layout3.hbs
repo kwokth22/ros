@@ -34,18 +34,20 @@
         var current_min;
         var current_sec;
         var name = "{{user.username}}";
+        var avatar = "{{user.avatar}}";
+        console.log(avatar);
         if(name=="" || name==null){
           name = "guest";
         }
         //Server
-        socket.emit("add user",name);
+        socket.emit("add user",{name:name, avatar:avatar});
         //New msg
         socket.on('chat message', function(data){
           date = new Date()
           current_hour = date.getHours();
           current_min = date.getMinutes();
           current_sec = date.getSeconds();
-          appendMessage(data.username, data.msg);
+          appendMessage(data.username, data.useravatar ,data.msg);
         });
         socket.on('add user',function(data){
           appendState(data.username+"Join");
@@ -70,9 +72,9 @@
           var message = document.getElementById("message_block");
           message.scrollTop = message.scrollHeight;
         }*/
-        function appendMessage(uname, msg){
-          $('#messages').append("<li class=\"right clearfix\"><span class=\"chat-img pull-right\"><img src=\"{{user.avatar}}\" class=\"img-responsive \" width=\"128\" height=\"72\" alt=\"User Avatar\"></span><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\"><i>"+uname+"</i></strong><small class=\"pull-right text-muted\"><i class=\"fa fa-clock-o\"></i> "+current_hour+":"+current_min+":"+current_sec+"</small></div><p><b>"+msg+" </b></p></div></li>");
-          console.log("<li class=\"right clearfix\"><span class=\"chat-img pull-right\"><img src=\"\"{{user.avatar}}\"\" alt=\"User Avatar\"></span><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\">"+uname+"</strong><small class=\"pull-right text-muted\"><i class=\"fa fa-clock-o\"></i> "+current_hour+":"+current_min+":"+current_sec+"</small></div><p>"+msg+" </p></div></li>");
+        function appendMessage(uname, uav ,msg){
+          $('#messages').append("<li class=\"right clearfix\"><span class=\"chat-img pull-right\"><img src="+uav+" class=\"img-responsive \" width=\"128\" height=\"72\" alt=\"User Avatar\"></span><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\"><i>"+uname+"</i></strong><small class=\"pull-right text-muted\"><i class=\"fa fa-clock-o\"></i> "+current_hour+":"+current_min+":"+current_sec+"</small></div><p><b>"+msg+" </b></p></div></li>");
+          //console.log("<li class=\"right clearfix\"><span class=\"chat-img pull-right\"><img src=\"\"{{user.avatar}}\"\" alt=\"User Avatar\"></span><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\">"+uname+"</strong><small class=\"pull-right text-muted\"><i class=\"fa fa-clock-o\"></i> "+current_hour+":"+current_min+":"+current_sec+"</small></div><p>"+msg+" </p></div></li>");
           var message = document.getElementById("message_block");
           message.scrollTop = message.scrollHeight;
         }

@@ -386,12 +386,14 @@ io.on('connection', function(socket){
 
 	//New user
 	socket.on('add user',function(msg){
-		socket.username = msg; // Save the user name
+		socket.username = msg.name; // Save the user name
+    socket.avatar = msg.avatar;
 		console.log("new user:"+msg+" logged in.");
 
 		//Send the name to everyone
 		io.emit('add new user',{
-			username: socket.username
+			username: socket.username,
+      avatar: socket.avatar
 		});
 		userCnt++; //increment User counter
 	});
@@ -403,6 +405,7 @@ io.on('connection', function(socket){
   	//New Message, send the name and msg to everyone
 		io.emit('chat message', {
 			username:socket.username,
+      useravatar: socket.avatar,
 			msg:msg
 		});
 	});
