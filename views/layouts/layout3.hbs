@@ -73,7 +73,7 @@
           message.scrollTop = message.scrollHeight;
         }*/
         function appendMessage(uname, uav ,msg){
-          $('#messages').append("<li class=\"right clearfix\"><span class=\"chat-img pull-right\"><img src="+uav+" class=\"img-responsive \" width=\"128\" height=\"72\" alt=\"User Avatar\"></span><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\"><i>"+uname+"</i></strong><small class=\"pull-right text-muted\"><i class=\"fa fa-clock-o\"></i> "+current_hour+":"+current_min+":"+current_sec+"</small></div><p><b>"+msg+" </b></p></div></li>");
+          $('#messages').append("<div class=\"right clearfix row\"><span class=\"chat-img pull-right\"><img src="+uav+" class=\"img-responsive \" width=\"128\" height=\"72\" alt=\"User Avatar\"></span><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\"><i>"+uname+"</i></strong><small class=\"pull-right text-muted\"><i class=\"fa fa-clock-o\"></i> "+current_hour+":"+current_min+":"+current_sec+"</small></div><p><b>"+msg+" </b></p></div></div><hr>");
           //console.log("<li class=\"right clearfix\"><span class=\"chat-img pull-right\"><img src=\"\"{{user.avatar}}\"\" alt=\"User Avatar\"></span><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\">"+uname+"</strong><small class=\"pull-right text-muted\"><i class=\"fa fa-clock-o\"></i> "+current_hour+":"+current_min+":"+current_sec+"</small></div><p>"+msg+" </p></div></li>");
           var message = document.getElementById("message_block");
           message.scrollTop = message.scrollHeight;
