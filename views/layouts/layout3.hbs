@@ -71,7 +71,7 @@
           message.scrollTop = message.scrollHeight;
         }*/
         function appendMessage(uname, msg){
-          $('#messages').append("<li class=\"right clearfix\"><span class=\"chat-img pull-right\"><img src=\"{{user.avatar}}\" alt=\"User Avatar\"></span><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\"><i>"+uname+"</i></strong><small class=\"pull-right text-muted\"><i class=\"fa fa-clock-o\"></i> "+current_hour+":"+current_min+":"+current_sec+"</small></div><p><b>"+msg+" </b></p></div></li>");
+          $('#messages').append("<li class=\"right clearfix\"><span class=\"chat-img pull-right\"><img src=\"{{user.avatar}}\" class=\"img-responsive \" width=\"128\" height=\"72\" alt=\"User Avatar\"></span><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\"><i>"+uname+"</i></strong><small class=\"pull-right text-muted\"><i class=\"fa fa-clock-o\"></i> "+current_hour+":"+current_min+":"+current_sec+"</small></div><p><b>"+msg+" </b></p></div></li>");
           console.log("<li class=\"right clearfix\"><span class=\"chat-img pull-right\"><img src=\"\"{{user.avatar}}\"\" alt=\"User Avatar\"></span><div class=\"chat-body clearfix\"><div class=\"header\"><strong class=\"primary-font\">"+uname+"</strong><small class=\"pull-right text-muted\"><i class=\"fa fa-clock-o\"></i> "+current_hour+":"+current_min+":"+current_sec+"</small></div><p>"+msg+" </p></div></li>");
           var message = document.getElementById("message_block");
           message.scrollTop = message.scrollHeight;
@@ -166,20 +166,18 @@
             <div class="item active">
                 <div class="fill" style="background-image:url('../img/head1.jpg');"></div>
                 <div class="carousel-caption">
-                    <font color="black"><h2>cFood</h2></font>
+                    <font color="black"><h2>cFood System</h2></font>
                 </div>
             </div>
             <div class="item">
                 <div class="fill" style="background-image:url('../img/head2.png');"></div>
                 <div class="carousel-caption">
-                    <h2>Most exciting search system</h2>
+                    <font color="black"><h2>Most exciting search system</h2></font>
                 </div>
             </div>
             <div class="item">
                 <div class="fill" style="background-image:url('../img/head3.jpg');"></div>
-                <div class="carousel-caption">
-                    <font color="black"><h2>Let's try</h2></font>
-                </div>
+
             </div>
         </div>
 
@@ -285,26 +283,7 @@
         interval: 5000 //changes the speed
     })
     </script>
-    <script type="text/javascript">
-    $(document).ready(function() {
 
-        $(".comment").shorten();
-
-    });
-    $(".comment").shorten({
-    "showChars" : 70
-    });
-    $(".comment").shorten({
-        "showChars" : 60,
-        "moreText"  : "See More",
-    });
-
-    $(".comment").shorten({
-        "showChars" : 60,
-        "moreText"  : "See More",
-        "lessText"  : "Less",
-    });
-    </script>
 
 
 </body>
