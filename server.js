@@ -144,7 +144,9 @@ app.get('/restaurant/', function(request, response){
               longitude: itemDetail[0].longitude
             };
           }
+          var today = new Date();
 
+          var hourago = new Date(today.getTime() - (1000*60*60));
           response.render('restaurant', {
             layout: 'layout',
             username: request.session.user_id,
@@ -153,6 +155,7 @@ app.get('/restaurant/', function(request, response){
             restDescription: itemDetail[0].Description,
             restImg: itemDetail[0].ImageSrc,
             location: location,
+            postTime: hourago,
             comment: postDetail,
             rating: itemDetail[0].averagerating.toPrecision(3),
             recommend: recomInfo
