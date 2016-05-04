@@ -54,7 +54,7 @@ app.post('/', upload_avatar.single('avatar'), function (request, response) {
     }else{
       //Check if the user has uploaded a custom avatar
       if(request.file){
-        var srcPath = "../"+request.file.path;
+        var srcPath = path.normalize( "../"+request.file.path);
       }else{
         var srcPath = "../img/default.jpg";
       }
