@@ -3,284 +3,48 @@ var util = require('util'); // debug
 var express = require('express');
 var path = require("path");
 var exphbs = require('express-handlebars');
-
+var multer = require('multer');
 var mysql = require('mysql');
 var session = require('express-session');
-
-// var bodyParser = require('body-parser');
-// var fileUpload = require('express-fileupload');
+var connection = require('./connectionProviderDB');
 var fs = require('fs');
-var multer = require('multer');
-var passport = require('passport');
-var localStrategy = require('passport-local').Strategy;
 
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 
-
-
-//Set up storage for food picture
-var storage_foodpic = multer.diskStorage({
-  destination: function(request, file, cb){
-    cb(null, 'uploads/foodpic');
-  },
-  filename: function(request, file, cb){
-    cb(null, Date.now()+".jpg");
-  }
-});
-var upload_foodpic = multer({storage: storage_foodpic});
-
-//set up storage for user avatar
-var storage_avatar = multer.diskStorage({
-  destination: function(request, file, cb){
-    cb(null, 'uploads/user');
-  },
-  filename: function(request, file, cb){
-    cb(null, Date.now()+".jpg");
-  }
-});
-var upload_avatar = multer({storage : storage_avatar});
-
-
-// Handling POST method
-
-// app.use(bodyParser.urlencoded({extended: false}));
-// app.use(bodyParser.json());
-
-//
+//Enable session for the application
 app.use(session({secret: 'loginkey'}));
-// app.use(passport.initialize());
-// app.use(passport.session());
-
-function checkAuth(request, response, next){
-  if(!request.session.user_id){
-    response.send('You are not authorized to view this page');
-  }else{
-    next();
-  }
-};
-
-
-
-
- // Connect to the mysql db
-var connection = mysql.createConnection({
-    host    :   '25.72.173.193',
-    user    :   'watermelon1995',
-    password:   'qwertyuiop',
-    database:   'cfood_db'
-});
-
-
-connection.connect(function(error){
-    if(error){
-        console.error('error connecting: '+error.stack);
-        return;
-    }
-    console.log('connected as id'+ connection.threadId);
-});
 
 //  Include middleware
 app.set('views', path.join(__dirname, 'views'));
 app.engine('.hbs', exphbs({defaultLayout: 'layout',extname: '.hbs'}));
 app.set('view engine', '.hbs');
 
-//  Basic Routing
-app.get('/', function(request, response){
-
-  connection.query('SELECT * FROM items', function(error, itemsRow){
-    if(error){
-      console.console.error(error);
-      response.status(500).end();
-      return;
-    }
-    //console.log(util.inspect(request.session.sysMsg));
-
-    if(request.session){
-      response.render('index',{
-        layout: 'layout',
-        chall: itemsRow,
-        username: request.session.user_id,
-        sysMsg: request.session.sysMsg
-      });
-    }else{
-      response.render('index',{
-        layout: 'layout',
-        chall: itemsRow
-      });
-    }
-    delete request.session.sysMsg;
-  });
-});
+var home =  require("./routes/home");
+var challengeDetail = require('./routes/restaurant');
+var login = require('./routes/login');
+var accountInfo = require('./routes/accountInfo');
+var registeration = require('./routes/signup');
+var instaup = require('./routes/instaup');
+var search = require('./routes/search');
+var topCha = require('./routes/topCha');
 
 
-app.get('/restaurant/', function(request, response){
-    var restID = request.query.rest;
-    console.log("Get /restaurant/?rest="+restID);
-    connection.query('SELECT * FROM items WHERE ItemID = ?', restID, function(error, itemDetail){
-      if(error){
-        console.error(error);
-        response.status(500).end();
-        return;
-      }
-
-      connection.query('SELECT posts.*, user.* FROM  posts, user WHERE ItemID = ? and posts.uid= user.uid', restID,function(error, postDetail){
-        if(error){
-          console.error(error);
-          response.status(500).end();
-          return;
-        }
-        connection.query('SELECT * FROM items WHERE foodtype = ? AND ItemID <> ? LIMIT 3', [itemDetail[0].foodtype, itemDetail[0].ItemID], function(error, recomInfo){
-          if(error){
-            console.error(error+"in foodtype");
-            response.status(500).end();
-          }
-          var location;
-          if(itemDetail[0].latitude && itemDetail[0].longitude){
-            location = {
-              latitude: itemDetail[0].latitude,
-              longitude: itemDetail[0].longitude
-            };
-          }
-          var today = new Date();
-
-          var hourago = new Date(today.getTime() - (1000*60*60));
-          response.render('restaurant', {
-            layout: 'layout',
-            username: request.session.user_id,
-            itemID: itemDetail[0].ItemID,
-            restName: itemDetail[0].Name,
-            restDescription: itemDetail[0].Description,
-            restImg: itemDetail[0].ImageSrc,
-            location: location,
-            postTime: hourago,
-            comment: postDetail,
-            rating: itemDetail[0].averagerating.toPrecision(3),
-            recommend: recomInfo
-          });
-        });
-      });
-    });
-});
+//Pages that are require for dynamic rendering
+app.use('/', home);
+app.use('/restaurant', challengeDetail);
+app.use('/login', login);
+app.use('/accountInfo', accountInfo);
+app.use('/signup', registeration);
+app.use('/Instaup', instaup);
+app.use('/search', search);
+app.use('/topCha', topCha);
 
 
-app.post('/restaurant',upload_avatar.single(), function(request, response){
-  if(request.body.comment){
-    connection.query('SELECT uid FROM user WHERE username = ?', request.session.user_id, function(error, userInfo){
-      if(error){
-        console.log(error);
-        return;
-      }
-      console.log(userInfo);
-      var postData = {
-        uid: userInfo[0].uid,
-        ItemID: request.query.post,
-        comment: request.body.comment
-      };
-      connection.query('INSERT INTO posts SET date = now(), ?', postData, function(error, rows){
-        if(error){
-          console.log(error);
-          return;
-        }
-        response.redirect('/restaurant?rest='+request.query.post);
-      });
-    });
-  }else if (request.body.rating) {
-    connection.query('SELECT ratednum, averagerating FROM items WHERE ItemID =?', request.query.rating, function(error, ratingRow){
-      if(error){
-        console.log(error);
-        return;
-      }
-      var currentRating = ratingRow[0].averagerating;
-      var newRatedNum = ratingRow[0].ratednum+1;
-      var newRating = ((currentRating*(ratingRow[0].ratednum) + Number(request.body.rating))/newRatedNum).toPrecision(5);
-      var updated = {
-        ratednum: newRatedNum,
-        averagerating : newRating
-      };
-      connection.query('UPDATE items SET ? WHERE ItemID = ?', [updated,request.query.rating], function(error, result){
-        if(error){
-          console.log(error);
-          return;
-        }
-        response.redirect('/restaurant?rest='+request.query.rating);
-      });
-    });
-  }
-});
-
-app.get('/InstaUp', function(request, response){
-  if(request.session.user_id){
-    response.render('InstaUp', {
-      layout: 'layout',
-      username: request.session.user_id
-    });
-  }else{
-    request.session.sysMsg = {
-        success: false,
-        content: "You have to login in order to upload new challenges"};
-    response.redirect('/');
-  }
-
-});
-
-app.post('/InstaUp',upload_foodpic.single('uploadphoto'), function(request, response){
-  //console.log(util.inspect(request.body));
-  //console.log(util.inspect(request.file));
-  var ImageSrc =path.normalize( "../"+request.file.path);
-  //console.log("Image src: "+ImageSrc);
-  if(request.body.latitude && request.body.longitude){
-    var newitems = {
-      Name: request.body.foodname,
-      restaurantname: request.body.restaurantname,
-      foodtype: request.body.foodtype,
-      latitude: request.body.latitude,
-      longitude: request.body.longitude,
-      Description: request.body.description,
-      ImageSrc: ImageSrc
-    };
-  }else{
-    var newitems = {
-      Name: request.body.foodname,
-      restaurantname: request.body.restaurantname,
-      foodtype: request.body.foodtype,
-      Description: request.body.description,
-      ImageSrc: ImageSrc
-    };
-  }
-
-  connection.query("INSERT INTO items set ?", newitems, function(error, result){
-    if(error){
-      console.log(error);
-      response.status(500).end();
-    }else {
-      response.redirect('/');
-    }
-  });
-});
-
-
-//alert message
-app.get('/message/', function(request, response){
-  response.render('message',{
-    layout: 'layout',
-    message: "this is alert message!",
-  });
-});
-
-app.get('/login', function(request, response){
-  if(request.session.user_id){
-    console.log("You have already login");
-    response.redirect('/');
-  }else{
-    response.render('login',{
-      layout: 'layout2'
-    });
-  }
-});
-
+//Pages that are required for static rendering
+//Handling url http://hostname/about
 app.get('/about', function(request, response){
   response.render('about',{
     layout: 'layout',
@@ -288,70 +52,18 @@ app.get('/about', function(request, response){
   });
 });
 
-app.get('/search', function(request, response){
-  if(request.query.data){
-    if(request.query.data=="restaurantname"){
-      connection.query("SELECT restaurantname FROM items",function(error, rows, field){
-        if(error){
-          console.log(error);
-          return;
-        }
-        response.send(JSON.stringify(rows));
-      });
-    }else{
-      connection.query("SELECT name FROM items",function(error, rows, field){
-        if(error){
-          console.log(error);
-          return;
-        }
-        response.send(JSON.stringify(rows));
-      });
-    }
-  }else{
-    response.render('search',{
-      layout: 'layout',
-      username: request.session.user_id,
-      NotSearch: false
-    });
-  }
+//Handling url http://hostname/logout
+app.get('/logout', function(request, response){
+  delete request.session.user_id;
+  request.session.sysMsg = {
+    success: true,
+    content: "You have logout"};
+  response.redirect('/');
 });
 
-app.post('/search', upload_foodpic.single(), function(request, response){
-  var str = request.body.query;
-  var searchBody = str.toLowerCase();
-  console.log(searchBody);
-  connection.query("SELECT * FROM items WHERE LOWER(Name) LIKE ? OR LOWER(restaurantname) LIKE ?", ["%"+searchBody+"%", "%"+searchBody+"%"], function(error, result){
-    if(error){
-      console.log(error);
-      return;
-    }
-    console.log(result);
-    response.render('search', {
-      layout: 'layout',
-      searchResult: result,
-      username: request.session.user_id
-    });
-  });
-});
-
-app.get('/topCha', function(request, response){
-  connection.query("SELECT * FROM items ORDER BY averagerating DESC LIMIT 5",function(error, topchall){
-    if(error){
-      console.log(error);
-      response.status(500).end();
-      return;
-    }
-    response.render('topchall', {
-      layout: 'layout',
-      chall: topchall,
-      username: request.session.user_id
-    });
-  });
-});
-
+//Handling chatroom
 app.get('/instantchat', function(request, response){
-  //response.sendFile(__dirname+'/client/chatroom.html');
-  console.log("User: "+request.session.user_id);
+  //Check if the user has logged in or not
   if(request.session.user_id){
     connection.query("SELECT avatar FROM user WHERE username = ?", request.session.user_id, function(error, avatar){
       if(error){
@@ -370,23 +82,16 @@ app.get('/instantchat', function(request, response){
     });
   }else{
     request.session.sysMsg = {
-        success: true,
-        content: login_info.username+" Login Successfully"
+        success: false,
+        content: "You have to login in order to join the chatroom"
       }
     response.redirect("/");
   }
-  // response.render('instantchat',{
-  //   layout: 'layout3',
-  //   user: {
-  //     name: request.session.
-  //   }
-  // });
 });
 
 var userCnt = 0;
 //Socket.io
 io.on('connection', function(socket){
-
 	//New user
 	socket.on('add user',function(msg){
 		socket.username = msg.name; // Save the user name
@@ -422,196 +127,18 @@ io.on('connection', function(socket){
 			username:socket.username
 		});
 	});
-
-
 });
 
 
-app.post('/login',upload_avatar.single(), function(request, response){
-  var login_info = request.body;
-  connection.query("SELECT * FROM user WHERE username = ?",[login_info.username], function(err, rows){
-    if(err)
-      console.log("Error");
-    if(!rows.length){
-      console .log("User not found");
-      response.render('login',{
-        layout: 'layout2',
-        errorMsg: "User not found"
-      });
-      return;
-    }
-    if(rows[0].pw!=login_info.pw ){
-      console.log("Wrong Password");
-      response.render('login',{
-        layout: 'layout2',
-        errorMsg: "Wrong Password"
-      });
-      return;
-    }
-    console.log(login_info.username+" Login Successfully");
-    request.session.user_id = login_info.username;
-    request.session.sysMsg = {
-        success: true,
-        content: login_info.username+" Login Successfully"};
-    response.redirect("/");
-  });
-});
-
-app.get('/accountInfo', function(request, response){
-  if(request.session.user_id){
-    connection.query("SELECT avatar FROM user WHERE username = ?", request.session.user_id, function(error, avatar){
-      if(error){
-        console.log(error);
-        return;
-      }
-      response.render('accountinfo', {
-        layout: 'layout',
-        sysMsg: request.session.sysMsg,
-        username: request.session.user_id,
-        avatar: avatar[0].avatar
-      });
-      delete request.session.sysMsg;
-    });
-  }else{
-    request.session.sysMsg = {
-      success: false,
-      content: "Your are not authorized to see this page"
-    };
-    response.redirect('/');
-  }
-});
-
-app.post('/accountinfo',upload_avatar.single('updateavatar'),function(request, response){
-  if(request.session.user_id){
-    if(request.query.q=="pw"){
-      var newPW = request.body.password;
-      var username = request.session.user_id;
-      console.log(newPW);
-      connection.query("UPDATE user SET pw = ? WHERE username = ?", [newPW, username], function(error, result){
-        if(error){
-          console.log(error);
-          return;
-        }
-        request.session.sysMsg = {
-          success: true,
-          content: "Your password has been updated!"
-        }
-        response.redirect('/accountinfo');
-      });
-    }else if (request.query.q=="av") {
-      var newAva = path.normalize("../"+request.file.path);
-      var username = request.session.user_id;
-      console.log(newAva);
-      connection.query("UPDATE user SET avatar = ? WHERE username = ?", [newAva, username], function(error, result){
-        if(error){
-          console.log(error);
-          return;
-        }
-        request.session.sysMsg = {
-          success: true,
-          content: "Your avatar has been updated!"
-        }
-        response.redirect('/accountinfo');
-      });
-    }else{
-      response.send("<h3>FUCK YOU</h3>");
-    }
-  }else{
-    response.send("<h3>FUCK YOU</h3>");
-  }
-
-});
-
-// handling registeration
-app.get('/signup/', function(request, response){
-  response.render('signup',{
-    layout: 'layout',
-    sysMsg: request.session.sysMsg
-  });
-  delete request.session.sysMsg;
-});
-
-app.post('/signup', upload_avatar.single('avatar'), function (request, response) {
-  console.log("A user has signed up");
-  //console.log(util.inspect(request.file));
-  if(request.file){
-    var srcPath = "../"+request.file.path;
-  }else{
-    var srcPath = "../img/default.jpg";
-  }
-  connection.query('SELECT username FROM user where username = ?',request.body.username, function(error, rows){
-    if(error){
-      console.error(error);
-      request.session.sysMsg = {
-        success: false,
-        content: error
-      };
-      response.redirect('/signup');
-      return;
-    }else if(rows.length>0){
-      console.log(util.inspect(rows));
-      request.session.sysMsg = {
-        success: false,
-        content: "User Name has been used"
-      };
-      response.redirect('/signup');
-      return;
-    }else{
-      var userinfo = {
-        username: request.body.username,
-        pw: request.body.password,
-        name: request.body.name,
-        avatar: srcPath
-      };
-      connection.query('INSERT INTO user set ?', userinfo, function(error, result){
-          if(error){
-            console.error(error);
-            request.session.sysMsg = {
-              success: false,
-              content: error
-            };
-            response.redirect('/signup');
-            return;
-          }else{
-            response.redirect('/login');
-            request.session.sysMsg = {
-              success: true,
-              content: "You have successfully signup"
-            };
-          }
-      });
-    }
-  });
-});
-// handling registeration
-app.get('/logout', function(request, response){
-  delete request.session.user_id;
-  request.session.sysMsg = {
-    success: true,
-    content: "You have logout"};
-  response.redirect('/');
-});
 
 //  Listen to environment port or port 3000
 http.listen(process.env.PORT || 3000, function(){
     console.log("Server is running ");
 });
-
-
-
-//  End connection to the db
-// connection.end();
-
-//  Static Routing
+//  Static Routing for nessary element
 app.use('/css',express.static('client/css'));
 app.use('/font-awesome',express.static('client/font-awesome'));
 app.use('/fonts',express.static('client/fonts'));
 app.use('/img',express.static('client/img'));
 app.use('/js',express.static('client/js'));
 app.use('/uploads', express.static('uploads'));
-// app.use(session({
-//   genid: function(req) {
-//     return genuuid() // use UUIDs for session IDs
-//   },
-//   secret: 'keyboard cat'
-// }))
