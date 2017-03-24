@@ -9,7 +9,7 @@
     <meta name="author" content="">
 	<link rel="icon" type="cFood.icon"
      href="../img/icon.png" />
-    <title>Welcome to cFood - Challenging Food System</title>
+    <title>Robot Management System</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -33,7 +33,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/"><strong>cFood</strong> <small>- Challenging Food System</small></a>
+                <a class="navbar-brand" href="/"><strong>RMS</strong> <small>- Robot Management System</small></a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -42,20 +42,22 @@
                         <a href="about">About</a>
                     </li>
 
+                    {{!--<li>
+                        <a href="Status">Status</a>
+                    </li>--}}
+
                     <li class="dropdown">
-                        <a href="restaurant" class="dropdown-toggle" data-toggle="dropdown">Restaurant<b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Info.<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="/InstaUp">New Challenge</a>
+                                <a href="Status">Status</a>
                             </li>
+
                              <li>
-                                <a href="/search">Search</a>
+                                <a href="Usage">Usage</a>
                             </li>
                         </ul>
                     </li>
-    				<li>
-                        <a href="/topCha" >Top Challenge</a>
-            </li>
 
                     {{#if username}}
                     <li class="dropdown">
@@ -63,9 +65,12 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/accountInfo">My account</a>
-                            </li>
+                            </li>                         
                             <li>
-                              <a href="/instantchat">InstaChat</a>
+                              <a href="/instantchat">Chat</a>
+                            </li>
+                             <li>
+                                <a href="/controller">Robot Controller</a>
                             </li>
                              <li>
                                 <a href="/logout">Logout</a>
@@ -92,19 +97,19 @@
         <!-- Indicators -->
         <ol class="carousel-indicators">
             <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myCarousel" data-slide-to="1"></li>
-            <li data-target="#myCarousel" data-slide-to="2"></li>
+            <!--<li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>-->
         </ol>
 
         <!-- Wrapper for slides -->
         <div class="carousel-inner">
             <div class="item active">
-                <div class="fill" style="background-image:url('../img/head1.jpg');"></div>
+                <div class="fill" style="background-image:url('../img/banner.jpg');"></div>
                 <div class="carousel-caption">
-                    <font color="black"><h2>cFood System</h2></font>
+                    <font color="black"><h4>Delivery Robot Site</h4></font>
                 </div>
             </div>
-            <div class="item">
+            <!--<div class="item">
                 <div class="fill" style="background-image:url('../img/head2.png');"></div>
                 <div class="carousel-caption">
                     <font color="black"><h2>Most exciting search system</h2></font>
@@ -112,8 +117,7 @@
             </div>
             <div class="item">
                 <div class="fill" style="background-image:url('../img/head3.jpg');"></div>
-                
-            </div>
+            </div>-->
         </div>
 
         <!-- Controls -->
@@ -161,7 +165,7 @@
         <footer>
             <div class="row">
                 <div class="col-lg-12">
-                    <p>Copyright &copy; cFood 2016</p>
+                    <p>Copyright &copy; Robot Management System 2017</p>
                 </div>
             </div>
         </footer>
@@ -180,36 +184,7 @@
     <script type="text/javascript" src="../js/jquery.shorten.js"></script>
     <script src="../js/handlebars.js"></script>
     <script src="../js/typeahead.bundle.js"></script>
-    <script type="text/javascript">
-    var restName = new Bloodhound({
-      datumTokenizer: Bloodhound.tokenizers.obj.whitespace("restaurantname"),
-      queryTokenizer: Bloodhound.tokenizers.whitespace,
-      prefetch: {
-        url: '/search?data=restaurantname',
-        ttl: 30000
-      }
-    });
-
-    var foodName = new Bloodhound({
-      datumTokenizer: Bloodhound.tokenizers.obj.whitespace("name"),
-      queryTokenizer: Bloodhound.tokenizers.whitespace,
-      prefetch: {
-      url: '/search?data=name',
-      ttl: 30000
-    }
-  });
-
-    $('#prefetch .typeahead').typeahead({highlight: true}, {
-      name: 'foodname',
-      displayKey: "name",
-      source: foodName
-    },{
-      name: 'restaurantname',
-      displayKey: 'restaurantname',
-      source: restName
-    });
-    $('#dropdown').css('background-color','#FFF');
-    </script>
+   
 
 
     <!-- Script to Activate the Carousel -->

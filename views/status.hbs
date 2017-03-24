@@ -1,0 +1,54 @@
+ <script type="text/javascript" src="../js/eventemitter2.min.js"></script>
+ <script type="text/javascript" src="../js/roslib.min.js"></script>
+
+ <script type="text/javascript" type="text/javascript">
+    // Connecting to ROS
+    // -----------------
+    var ros = new ROSLIB.Ros({
+        url : 'ws://127.0.0.1:8080'
+    });
+    ros.on('connection', function() {
+        var element = document.getElementById("status");
+        element.innerHTML = "ROS Bridge Status: OK";
+        console.log('Connected to websocket server.');
+    });
+    ros.on('error', function(error) {
+        var element = document.getElementById("status");
+        element.innerHTML = "ROS Bridge Status: ERROR";
+        console.log('Error connecting to websocket server: ', error);
+    });
+    ros.on('close', function() {
+        var element = document.getElementById("status");
+        element.innerHTML = "ROS Bridge Status: CLOSE";
+        console.log('Connection to websocket server closed.');
+    });
+</script>
+
+<!-- Page Heading/Breadcrumbs -->
+<div class="row">
+      <div class="col-lg-12">
+          <h1 class="page-header">Current Status
+              <small>Map creation and Server status</small>
+          </h1>
+          <ol class="breadcrumb">
+              <li><a href="/">Home</a>
+              </li>
+              <li class="active">Status</li>
+          </ol>
+      </div>
+</div>
+
+<div class="row">
+      <div class="col-md-5">
+          <h3>Generated Map</h3>
+          <img class="img-responsive" src="../img/dilidili.jpg" alt="">
+      </div>
+      <div class="col-md-5">
+          <h3>ROS Bridge Status</h3>
+          <hr>
+          <p id=status></p>
+          <h3>Robot Status</h3>
+          <hr>
+          Robot Status: Transporting
+      </div>
+</div>

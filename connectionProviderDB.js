@@ -2,10 +2,10 @@ var mysql = require('mysql');
 
 // Connect to the mysql db
 var connection = mysql.createConnection({
-   host    :   '172.17.0.2',
-   user    :   'watermelon1995',
-   password:   '123456',
-   database:   'cfood_db'
+   host    :   '127.0.0.1',
+   user    :   'root',
+   password:   '2201923k',
+   database:   'robot'
 });
 // Start the connection
 connection.connect(function(error){

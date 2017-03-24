@@ -22,31 +22,53 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('.hbs', exphbs({defaultLayout: 'layout',extname: '.hbs'}));
 app.set('view engine', '.hbs');
 
-var home =  require("./routes/home");
-var challengeDetail = require('./routes/restaurant');
+
 var login = require('./routes/login');
 var accountInfo = require('./routes/accountInfo');
 var registeration = require('./routes/signup');
-var instaup = require('./routes/instaup');
-var search = require('./routes/search');
-var topCha = require('./routes/topCha');
+var usage = require('./routes/usage');
 
 
 //Pages that are require for dynamic rendering
-app.use('/', home);
-app.use('/restaurant', challengeDetail);
+
 app.use('/login', login);
 app.use('/accountInfo', accountInfo);
 app.use('/signup', registeration);
-app.use('/Instaup', instaup);
-app.use('/search', search);
-app.use('/topCha', topCha);
+app.use('/usage', usage);
 
 
 //Pages that are required for static rendering
+app.get('/', function(request, response){
+  response.render('home',{
+    layout: 'layout',
+    username: request.session.user_id
+  });
+});
+
 //Handling url http://hostname/about
 app.get('/about', function(request, response){
   response.render('about',{
+    layout: 'layout',
+    username: request.session.user_id
+  });
+});
+
+app.get('/status',function(request, response){
+  response.render('status',{
+    layout: 'layout',
+    username: request.session.user_id
+  });
+});
+
+// app.get('/usage',function(request, response){
+//   response.render('usage',{
+//     layout: 'layout',
+//     username: request.session.user_id
+//   });
+// });
+
+app.get('/controller', function(request, response){
+  response.render('controller',{
     layout: 'layout',
     username: request.session.user_id
   });
@@ -142,3 +164,5 @@ app.use('/fonts',express.static('client/fonts'));
 app.use('/img',express.static('client/img'));
 app.use('/js',express.static('client/js'));
 app.use('/uploads', express.static('uploads'));
+
+app.use(express.static('node_modules'));

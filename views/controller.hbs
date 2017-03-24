@@ -1,0 +1,171 @@
+<script type="text/javascript" src="../js/eventemitter2.min.js"></script>
+<script type="text/javascript" src="../js/roslib.min.js"></script>
+<script type="text/javascript" type="text/javascript">
+    // Connecting to ROS
+    // -----------------
+    var ros = new ROSLIB.Ros({
+        url : 'ws://127.0.0.1:8080'
+    });
+    ros.on('connection', function() {
+        console.log('Connected to websocket server.');
+    });
+    ros.on('error', function(error) {
+        console.log('Error connecting to websocket server: ', error);
+    });
+    ros.on('close', function() {
+        console.log('Connection to websocket server closed.');
+    });
+</script>
+
+<!-- Page Heading/Breadcrumbs -->
+<div class="row">
+      <div class="col-lg-12">
+          <h1 class="page-header">Controller
+              <small>Robot Controller</small>
+          </h1>
+          <ol class="breadcrumb">
+              <li><a href="/">Home</a>
+              </li>
+              <li class="active">Controller</li>
+          </ol>
+      </div>
+</div>
+
+<div class="row">
+      <div class="col-md-6">
+          <h2>Real-time Map</h2>
+          <img class="img-responsive" src="../img/dilidili.jpg" alt="">
+      </div>
+      <div class="col-md-6">
+                <h2>Press any key to control robot</h2>
+                <div class="btn-group btn-group-justified">
+                    <a href="#" class="btn btn-default" onclick="leftUp()"><div><i class="fa fa-undo" aria-hidden="true"></i></div> Left Up</a>
+                    <a href="#" class="btn btn-default" onclick="up()"><div><i class="fa fa-arrow-up" aria-hidden="true"></i></div>Up</a>
+                    <a href="#" class="btn btn-default" onclick="rightUp()"><div><i class="fa fa-repeat" aria-hidden="true"></i></div>Right Up</a>
+                </div>
+
+                <div class="btn-group btn-group-justified">
+                    <style>
+                    div#myDiv {
+                        -ms-transform: rotate(180deg); /* IE 9 */
+                        -webkit-transform: rotate(180deg); /* Safari */
+                        transform: rotate(180deg); /* Standard syntax */
+                    }
+                    </style>
+                        <a href="#" class="btn btn-default" onclick="leftDown()"><div id ="myDiv"><i class="fa fa-undo" aria-hidden="true"> </i></div>Left Down</a>
+                        <a href="#" class="btn btn-default" onclick="down()"><div><i class="fa fa-arrow-down" aria-hidden="true"></i></div>Down</a>
+                        <a href="#" class="btn btn-default" onclick="rightDown()"><div id ="myDiv"><i class="fa fa-repeat" aria-hidden="true"> </i></div>Right Down</a>
+                    </div>
+                <div class="btn-group btn-group-justified">
+                    <a href="#" class="btn btn-default" onclick="stop()"><div><i class="fa fa-stop" aria-hidden="true"></i></div>Stop</a>
+                </div>    
+      </div>
+</div>
+
+<script>
+  function up() {
+    var cmdVel = new ROSLIB.Topic({
+      ros : ros,
+      name : '/robot_command',
+      messageType : 'std_msgs/UInt8'
+    });
+    var twist1 = new ROSLIB.Message({
+      data : 76
+    });
+    var twist2 = new ROSLIB.Message({
+      data : 203
+    });
+    cmdVel.publish(twist1);
+    cmdVel.publish(twist2);
+  }
+  function down() {
+    var cmdVel = new ROSLIB.Topic({
+      ros : ros,
+      name : '/robot_command',
+      messageType : 'std_msgs/UInt8'
+    });
+    var twist1 = new ROSLIB.Message({
+      data : 52
+    });
+    var twist2 = new ROSLIB.Message({
+      data : 180
+    });
+    cmdVel.publish(twist1);
+    cmdVel.publish(twist2);
+  }
+  function rightUp() {
+    var cmdVel = new ROSLIB.Topic({
+      ros : ros,
+      name : '/robot_command',
+      messageType : 'std_msgs/UInt8'
+    });
+    var twist1 = new ROSLIB.Message({
+      data : 76
+    });
+    var twist2 = new ROSLIB.Message({
+      data : 210
+    });
+    cmdVel.publish(twist1);
+    cmdVel.publish(twist2);
+  }
+  function leftUp() {
+    var cmdVel = new ROSLIB.Topic({
+      ros : ros,
+      name : '/robot_command',
+      messageType : 'std_msgs/UInt8'
+    });
+    var twist1 = new ROSLIB.Message({
+      data : 85
+    });
+    var twist2 = new ROSLIB.Message({
+      data : 203
+    });
+    cmdVel.publish(twist1);
+    cmdVel.publish(twist2);
+  }
+  function rightDown() {
+    var cmdVel = new ROSLIB.Topic({
+      ros : ros,
+      name : '/robot_command',
+      messageType : 'std_msgs/UInt8'
+    });
+    var twist1 = new ROSLIB.Message({
+      data : 52
+    });
+    var twist2 = new ROSLIB.Message({
+      data : 210
+    });
+    cmdVel.publish(twist1);
+    cmdVel.publish(twist2);
+  }
+  function leftDown() {
+    var cmdVel = new ROSLIB.Topic({
+      ros : ros,
+      name : '/robot_command',
+      messageType : 'std_msgs/UInt8'
+    });
+    var twist1 = new ROSLIB.Message({
+      data : 85
+    });
+    var twist2 = new ROSLIB.Message({
+      data : 180
+    });
+    cmdVel.publish(twist1);
+    cmdVel.publish(twist2);
+  }
+  function stop() {
+    var cmdVel = new ROSLIB.Topic({
+      ros : ros,
+      name : '/robot_command',
+      messageType : 'std_msgs/UInt8'
+    });
+    var twist1 = new ROSLIB.Message({
+      data : 0
+    });
+    var twist2 = new ROSLIB.Message({
+      data : 0
+    });
+    cmdVel.publish(twist1);
+    cmdVel.publish(twist2);
+  }
+</script>
