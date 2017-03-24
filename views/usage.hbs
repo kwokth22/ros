@@ -21,31 +21,62 @@
       </div>
 </div>
 
-<div class="row">
+{{!--<div class="row">
       <div class="col-md-10">
           <h3>Month Usage</h3>
           
       </div>
-</div>
+</div>--}}
 
 <script type="text/javascript">
-    var container = document.getElementById('visualization');
-    var items = [
-        {x: '2017-02-11', y: 10},
-        {x: '2017-02-12', y: 30}    
-    ];
+        var counter = [];
+        var year = [];
+        var month = [];
+        var day = [];
 
-    var dataset = new vis.DataSet(items);
-    var options = {
-        style:'bar',
-        barChart: {width:40, align:'center'}, // align: left, center, right
-        drawPoints: false,
-        dataAxis: {
-            icons:true
-        },
-        orientation:'top',
-        start: '2017-02-10',
-        end: '2017-02-18'
-    };
-    var graph2d = new vis.Graph2d(container, items, options);
+        //push the got data into array
+        counter.push( {{count}} );
+        year.push( {{year}} );
+        month.push( {{month}} );
+        day.push( {{day}} );
+
+        //print daily count
+        {{!--for(var i in counter)
+        {
+            console.log(counter[i]);
+        }--}}
+
+        //print date
+        for(var i = 0; i < year.length; i++)
+        {
+            console.log(year[i]+"/"+month[i]+"/"+day[i]);
+        }
+
+        //Construct Graph
+        var container = document.getElementById('visualization');
+        var items = [];
+        var dateArray = [];
+        var d = new Date();
+
+        for(var i = 0; i < year.length; i++){
+           items.push( {x: d.setFullYear(year[i],month[i]-1,day[i]), y: counter[i]} );
+            console.log(d);
+        }
+
+        var dataset = new vis.DataSet(items);
+        var options = {
+            style:'bar',
+            barChart: {width:40, align:'center'}, // align: left, center, right
+            drawPoints: false,
+            dataAxis: {
+                icons:true
+            },
+            orientation:'top',
+            start: year[0]+'-'+month[0]+'-'+day[0],
+            end: year[year.length-1]+'-'+month[month.length-1]+'-'+day[day.length-1]
+            {{!--start: '2017-02-25',
+            end: '2017-03-17'--}}
+        };
+        var graph2d = new vis.Graph2d(container, items, options);
 </script>
+

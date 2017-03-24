@@ -4,7 +4,7 @@
     // Connecting to ROS
     // -----------------
     var ros = new ROSLIB.Ros({
-        url : 'ws://127.0.0.1:8080'
+        url : 'ws://172.18.4.28:9090'
     });
     ros.on('connection', function() {
         console.log('Connected to websocket server.');

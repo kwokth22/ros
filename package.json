@@ -1,13 +1,13 @@
 {
-  "name": "cfood",
+  "name": "rms",
   "version": "1.0.0",
-  "description": "Challenging Food System",
-  "main": "server.js",
+  "description": "robot",
+  "main": "connectionProviderDB.js",
   "dependencies": {
     "async": "^0.2.10",
     "body-parser": "^1.15.0",
     "express": "^4.13.4",
-    "express-fileupload": "0.0.4",
+    "express-fileupload": "^0.0.4",
     "express-generator": "^4.13.1",
     "express-handlebars": "^3.0.0",
     "express-session": "^1.13.0",
@@ -16,7 +16,9 @@
     "node-static": "^0.7.7",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
-    "socket.io": "^1.4.5"
+    "socket.io": "^1.4.5",
+    "vis": "^4.18.1",
+    "web-push": "^3.2.2"
   },
   "devDependencies": {},
   "scripts": {
@@ -25,9 +27,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://watermelon1995@bitbucket.org/group04_csci3100_2016/cfood.git"
+    "url": "git+https://github.com/kwokth22/testing.git"
   },
-  "author": "group04_csci3100",
+  "author": "kwok (https://github.com/kwokth22)",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/group04_csci3100_2016/cfood#readme"
+  "bugs": {
+    "url": "https://github.com/kwokth22/testing/issues"
+  },
+  "homepage": "https://github.com/kwokth22/testing#readme"
 }

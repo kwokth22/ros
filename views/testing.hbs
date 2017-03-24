@@ -1,0 +1,73 @@
+<script type="text/javascript" src="http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+<script type="text/javascript" src="http://cdn.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+
+<script type="text/javascript" type="text/javascript">
+  // Connecting to ROS
+  // -----------------
+
+  var ros = new ROSLIB.Ros({
+    url : 'ws://172.18.4.28:9090'
+  });
+
+  ros.on('connection', function() {
+    console.log('Connected to websocket server.');
+  });
+
+  ros.on('error', function(error) {
+    console.log('Error connecting to websocket server: ', error);
+  });
+
+  ros.on('close', function() {
+    console.log('Connection to websocket server closed.');
+  });
+
+
+
+  // Subscribing to a Topic
+  // ----------------------
+
+  var listener = new ROSLIB.Topic({
+    ros : ros,
+    //topic name
+    name : '/listener',
+    messageType : 'std_msgs/String'
+  });
+
+  listener.subscribe(function(message) {
+    console.log('Received message on ' + listener.name + ': ' + message.data);
+    console.log("finish received");  
+    //post form
+    document.getElementById("submit").click();
+    listener.unsubscribe();
+  });
+</script>
+ 
+
+<!-- Page Heading/Breadcrumbs -->
+<div class="row">
+      <div class="col-lg-12">
+          <h1 class="page-header">Testing</h1>
+          <ol class="breadcrumb">
+              <li><a href="/">Home</a>
+              </li>
+              <li class="active">Testing DB, etc.</li>
+          </ol>
+      </div>
+</div>
+
+<div class="row">
+      <div class="col-md-10">
+          <h3>Testing Usage</h3>
+          <small>add 1 record</small>
+            <form id="testing" name="testing"  method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-lg-6">
+                <button id="submit" type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+          </form>
+      </div>
+</div>
+
+
+

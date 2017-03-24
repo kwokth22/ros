@@ -1,6 +1,6 @@
-# cFood #
+# RMS #
 ## 
-This is a Challenging food recommend application based on Nodejs 
+Robot Management based on Nodejs 
 ##
 
 To Run this application:
@@ -8,7 +8,7 @@ To Run this application:
 ```
 #!bash
 
-$ git clone https://watermelon1995@bitbucket.org/group04_csci3100_2016/cfood.git
+$ change DB ac and pw
 $ npm install
 $ node server.js
 ```

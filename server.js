@@ -27,60 +27,73 @@ var login = require('./routes/login');
 var accountInfo = require('./routes/accountInfo');
 var registeration = require('./routes/signup');
 var usage = require('./routes/usage');
-
-
+var testing = require('./routes/testing');
+var testing2 = require('./routes/testing2');
+var queue = require('./routes/queue');
+var combine = require('./routes/combine');
 //Pages that are require for dynamic rendering
 
 app.use('/login', login);
 app.use('/accountInfo', accountInfo);
 app.use('/signup', registeration);
 app.use('/usage', usage);
+app.use('/testing', testing);
+app.use('/testing2',testing2);
+app.use('/queue',queue);
+app.use('/combine',combine);
 
 
 //Pages that are required for static rendering
 app.get('/', function(request, response){
-  response.render('home',{
-    layout: 'layout',
-    username: request.session.user_id
-  });
+    response.render('home',{
+      layout: 'layout',
+      username: request.session.user_id
+    });
 });
 
 //Handling url http://hostname/about
 app.get('/about', function(request, response){
-  response.render('about',{
-    layout: 'layout',
-    username: request.session.user_id
-  });
+    response.render('about',{
+      layout: 'layout',
+      username: request.session.user_id
+    });
 });
 
 app.get('/status',function(request, response){
-  response.render('status',{
-    layout: 'layout',
-    username: request.session.user_id
-  });
+    response.render('status',{
+      layout: 'layout4',
+      username: request.session.user_id
+    });
 });
 
-// app.get('/usage',function(request, response){
-//   response.render('usage',{
-//     layout: 'layout',
-//     username: request.session.user_id
-//   });
+// app.get('/queue',function(request, response){
+//     response.render('queue',{
+//       layout: 'layout',
+//       username: request.session.user_id
+//     });
 // });
 
+
+
 app.get('/controller', function(request, response){
-  response.render('controller',{
-    layout: 'layout',
-    username: request.session.user_id
-  });
+    if(request.session.user_id){
+       response.render('controller', {
+           layout: 'layout',
+           username: request.session.user_id,
+      });
+    }
+    else{
+          response.redirect('/');
+    }  
 });
 
 //Handling url http://hostname/logout
 app.get('/logout', function(request, response){
-  delete request.session.user_id;
-  request.session.sysMsg = {
-    success: true,
-    content: "You have logout"};
-  response.redirect('/');
+    delete request.session.user_id;
+    request.session.sysMsg = {
+      success: true,
+      content: "You have logout"};
+    response.redirect('/');
 });
 
 //Handling chatroom
