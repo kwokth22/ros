@@ -271,9 +271,9 @@ NAV2D.Navigator = function(options) {
         console.log(returnPosY);
 
         var doc = document.getElementById("x");
-        doc.innerHTML = "Position X: " + returnPosX;
+        doc.innerHTML = "Clicked Goal Position X: " + returnPosX;
         doc = document.getElementById("y");
-        doc.innerHTML = "Position Y: " + returnPosY;
+        doc.innerHTML = "Clicked Goal Position Y: " + returnPosY;
 
 
         thetaRadians  = Math.atan2(xDelta,yDelta);

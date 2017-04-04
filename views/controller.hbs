@@ -6,10 +6,15 @@
 <script type="text/javascript" src="../js/nav2d.js"></script>
 
 <script type="text/javascript">
+  
   /**
    * Setup all GUI elements when the page is loaded.
    */
   function init() {
+    var button = document.getElementById('button');
+    var buttonDiv = document.getElementById('buttonDiv');
+    buttonDiv.style.display = 'none';
+
     // Connect to ROS.
     var ros = new ROSLIB.Ros({
       url : 'ws://localhost:8080'
@@ -18,8 +23,8 @@
     // Create the main viewer.
     var viewer = new ROS2D.Viewer({
       divID : 'nav',
-      width : 400,
-      height : 300
+      width : 450,
+      height : 450
     });
 
     
@@ -100,11 +105,13 @@
 <div class="row">
       <div class="col-md-6">
           <h2>Real-time Map</h2>
-          <button onclick="init()">Click to open the map</button>
+          <div id="buttonDiv">
+          <button id="button" onclick="init()">Click to open the map</button>
+          </div>
           {{!--<img class="img-responsive" src="../img/dilidili.jpg" alt="">--}}
           <div id="nav"></div>
-          <p id="x">Clicked Poistion X: </p>
-          <p id="y">Clicked Poistion Y: </p>
+          <p id="x">Clicked Goal Poistion X: </p>
+          <p id="y">Clicked Goal Poistion Y: </p>
       </div>
       <div class="col-md-6">
                 <h2>Press any key to control robot</h2>
