@@ -78,7 +78,7 @@ app.get('/status',function(request, response){
 app.get('/controller', function(request, response){
     if(request.session.user_id){
        response.render('controller', {
-           layout: 'layout',
+           layout: 'layout4',
            username: request.session.user_id,
       });
     }

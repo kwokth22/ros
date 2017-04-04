@@ -1,20 +1,86 @@
-<script type="text/javascript" src="../js/eventemitter2.min.js"></script>
+<script type="text/javascript" src="http://cdn.robotwebtools.org/EaselJS/current/easeljs.min.js"></script>
+<script type="text/javascript" src="http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+
 <script type="text/javascript" src="../js/roslib.min.js"></script>
-<script type="text/javascript" type="text/javascript">
-    // Connecting to ROS
-    // -----------------
+<script type="text/javascript" src="../js/ros2d.js"></script>
+<script type="text/javascript" src="../js/nav2d.js"></script>
+
+<script type="text/javascript">
+  /**
+   * Setup all GUI elements when the page is loaded.
+   */
+  function init() {
+    // Connect to ROS.
     var ros = new ROSLIB.Ros({
-        url : 'ws://172.18.4.28:9090'
+      url : 'ws://localhost:8080'
     });
-    ros.on('connection', function() {
-        console.log('Connected to websocket server.');
+
+    // Create the main viewer.
+    var viewer = new ROS2D.Viewer({
+      divID : 'nav',
+      width : 400,
+      height : 300
     });
-    ros.on('error', function(error) {
-        console.log('Error connecting to websocket server: ', error);
+
+    
+    // Subscribing to a Topic for noticfication
+    // ----------------------
+
+    var listener = new ROSLIB.Topic({
+        ros : ros,
+        //topic name
+        name : '/listener',
+        messageType : 'std_msgs/String'
     });
-    ros.on('close', function() {
-        console.log('Connection to websocket server closed.');
+
+    listener.subscribe(function(message) {
+        console.log('Received message on ' + listener.name + ': ' + message.data);
+        var element = document.getElementById("dstatus");
+        if(message.data == "finish"){
+            console.log("123");
+            element.innerHTML= "Delivery status: " + message.data;
+            document.getElementById("button-wn-show-preset").click();
+        }
+        else{
+            console.log("456");
+            element.innerHTML= "Delivery status: Not finish" ;
+        }
+        listener.unsubscribe();
     });
+
+
+    // Setup the nav client with Orientation
+    var nav = NAV2D.OccupancyGridClientNav({
+      ros : ros,   
+      rootObject : viewer.scene,
+      viewer : viewer,
+      serverName : '/move_base',
+      topic : '/gmapping/map',
+      actionName : '/move_base/goal',
+      withOrientation : true,
+      continuous : true
+    });
+    
+    //set the path 
+    var listener = new ROSLIB.Topic({
+      ros : ros,
+      name : '/move_base/NavfnROS/plan',
+      messageType : 'nav_msgs/Path'
+    });
+
+    listener.subscribe(function(pose){
+      var setColor = createjs.Graphics.getRGB(240, 0, 0);
+      console.log('Recevie data '+ listener.name+' :'+ pose.poses[0].pose.position.x);
+      var path = new ROS2D.PathShape({
+          path: pose,
+          strokeSize: 0.03,
+          strokeColor: setColor
+       });
+    //add the object into viewer
+    viewer.addObject(path);
+    // viewer.addObject(navArrow);
+    });
+  }
 </script>
 
 <!-- Page Heading/Breadcrumbs -->
@@ -34,7 +100,11 @@
 <div class="row">
       <div class="col-md-6">
           <h2>Real-time Map</h2>
-          <img class="img-responsive" src="../img/dilidili.jpg" alt="">
+          <button onclick="init()">Click to open the map</button>
+          {{!--<img class="img-responsive" src="../img/dilidili.jpg" alt="">--}}
+          <div id="nav"></div>
+          <p id="x">Clicked Poistion X: </p>
+          <p id="y">Clicked Poistion Y: </p>
       </div>
       <div class="col-md-6">
                 <h2>Press any key to control robot</h2>
