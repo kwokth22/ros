@@ -270,10 +270,17 @@ NAV2D.Navigator = function(options) {
         console.log("return Y");
         console.log(returnPosY);
 
-        var doc = document.getElementById("x");
-        doc.innerHTML = "Clicked Goal Position X: " + returnPosX;
-        doc = document.getElementById("y");
-        doc.innerHTML = "Clicked Goal Position Y: " + returnPosY;
+
+        var doc = document.getElementById('goalDiv');
+        var goalCount = 1;
+        doc.innerHTML += "Number of Goal "+ goalCount;
+        doc.innerHTML += "Position X "+returnPosX;
+        doc.innerHTML += "Position Y "+returnPosY;
+        goalCount++;
+        // var doc = document.getElementById("x");
+        // doc.innerHTML = "Clicked Goal Position X: " + returnPosX;
+        // doc = document.getElementById("y");
+        // doc.innerHTML = "Clicked Goal Position Y: " + returnPosY;
 
 
         thetaRadians  = Math.atan2(xDelta,yDelta);
@@ -361,18 +368,18 @@ NAV2D.OccupancyGridClientNav = function(options) {
       withOrientation : that.withOrientation
     });
     
-    var listener = new ROSLIB.Topic({
-      ros : that.ros,
-      name : '/move_base/NavfnROS/plan',
-      messageType : 'nav_msgs/Path'
-    });
+    // var listener = new ROSLIB.Topic({
+    //   ros : that.ros,
+    //   name : '/move_base/NavfnROS/plan',
+    //   messageType : 'nav_msgs/Path'
+    // });
 
-    listener.subscribe(function(pose){
-      // console.log('Recevie data '+ listener.name+' :'+ pose.poses[0].pose.position.x);
-      var path = new ROS2D.PathShape({
-          path: pose
-       });
-    });
+    // listener.subscribe(function(pose){
+    //   // console.log('Recevie data '+ listener.name+' :'+ pose.poses[0].pose.position.x);
+    //   var path = new ROS2D.PathShape({
+    //       path: pose
+    //    });
+    // });
 
 
     // scale the viewer to fit the map
