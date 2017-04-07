@@ -27,14 +27,14 @@
   var listener = new ROSLIB.Topic({
     ros : ros,
     //topic name
-    name : '/listener',
+    name : '/confirm',
     messageType : 'std_msgs/String'
   });
 
   listener.subscribe(function(message) {
     console.log('Received message on ' + listener.name + ': ' + message.data);
     //post form
-    if(message.data == "finish")
+    if(message.data == "confirm")
       {
         document.getElementById("button-wn-show-preset").click();
         console.log("ye");

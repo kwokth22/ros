@@ -272,11 +272,12 @@ NAV2D.Navigator = function(options) {
 
 
         var doc = document.getElementById('goalDiv');
-        var goalCount = 1;
-        doc.innerHTML += "Number of Goal "+ goalCount;
+        // var goalCount = 1;
+        // doc.innerHTML += "Number of Goal "+ goalCount;
         doc.innerHTML += "Position X "+returnPosX;
+        doc.innerHTML += "</br>";
         doc.innerHTML += "Position Y "+returnPosY;
-        goalCount++;
+        // goalCount++;
         // var doc = document.getElementById("x");
         // doc.innerHTML = "Clicked Goal Position X: " + returnPosX;
         // doc = document.getElementById("y");

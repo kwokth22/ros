@@ -6,7 +6,7 @@
   // -----------------
 
   var ros = new ROSLIB.Ros({
-    url : 'ws://172.18.4.28:9090'
+    url : 'ws://localhost:9090'
   });
 
   ros.on('connection', function() {
@@ -21,15 +21,13 @@
     console.log('Connection to websocket server closed.');
   });
 
-
-
   // Subscribing to a Topic
   // ----------------------
 
   var listener = new ROSLIB.Topic({
     ros : ros,
     //topic name
-    name : '/listener',
+    name : '/confirm',
     messageType : 'std_msgs/String'
   });
 
@@ -42,6 +40,26 @@
   });
 </script>
  
+<script type="text/javascript" type="text/javascript">
+  function confirm(){
+
+
+      // Publishing a Topic
+      // ------------------
+
+      var confirmTopic = new ROSLIB.Topic({
+        ros : ros,
+        name : '/confirm',
+        messageType : 'std_msgs/String'
+      });
+      console.log("confirm topic");
+      var msg = 'confirm';
+      confirmTopic.publish(msg);
+  }
+
+  
+</script>
+
 
 <!-- Page Heading/Breadcrumbs -->
 <div class="row">
@@ -64,7 +82,7 @@
             <form id="testing" name="testing"  method="POST" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-lg-6">
-                <button id="submit" type="submit" class="btn btn-primary">Confirm</button>
+                <button id="submit" onclick="confirm()" type="submit" class="btn btn-primary">Confirm</button>
                 </div>
             </div>
           </form>

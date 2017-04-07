@@ -110,7 +110,7 @@
     buttonDiv.style.display = 'none';
     // Connect to ROS.
     var ros = new ROSLIB.Ros({
-      url : 'ws://localhost:8080'
+      url : 'ws://localhost:9090'
     });
 
     ros.on('connection', function() {

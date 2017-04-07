@@ -20,19 +20,20 @@ router.get('/', function(request, response){
                 } 
                 //need check the rows empty or not
                 console.log(rows);  
-                connection.query('SELECT username as receiver FROM user WHERE uid = ? ', rows[0].receiver, function(error, receiverInfo){
-                  if(error){
-                    console.log(error);
-                    return;
-                  }   
-  
-                  response.render('confirmation', {
-                    layout: 'layout4',
-                    username: request.session.user_id,
-                    receiverName : receiverInfo[0].receiver,
-                    process : rows[0].processing
+
+                  connection.query('SELECT username as receiver FROM user WHERE uid = ? ', rows[0].receiver, function(error, receiverInfo){
+                    if(error){
+                      console.log(error);
+                      return;
+                    }   
+    
+                    response.render('confirmation', {
+                      layout: 'layout4',
+                      username: request.session.user_id,
+                      receiverName : receiverInfo[0].receiver,
+                      process : rows[0].processing
+                    });
                   });
-                });
              });  
           });
         }
@@ -64,7 +65,7 @@ router.post('/',requestBody.single(), function(request, response){
               console.log(error);
               return;
             }
-             response.redirect('/');
+            //  response.redirect('/');
           });
           // response.redirect('/');
         });
