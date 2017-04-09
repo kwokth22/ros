@@ -110,7 +110,7 @@
     buttonDiv.style.display = 'none';
     // Connect to ROS.
     var ros = new ROSLIB.Ros({
-      url : 'ws://localhost:9090'
+      url : 'ws://172.18.6.38:9090'
     });
 
     ros.on('connection', function() {
@@ -167,7 +167,7 @@
     var gridClient = new ROS2D.OccupancyGridClient({
       ros : ros,
       rootObject : viewer.scene,
-      topic : '/gmapping/map',
+      topic : '/map',
       // Use this property in case of continuous updates			
       continuous: true
     });

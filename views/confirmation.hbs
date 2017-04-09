@@ -20,6 +20,21 @@
   ros.on('close', function() {
     console.log('Connection to websocket server closed.');
   });
+  function confirm(){
+      // Publishing a Topic for confirm
+      // ------------------
+
+      var confirmTopic = new ROSLIB.Topic({
+        ros : ros,
+        name : '/confirm',
+        messageType : 'std_msgs/String'
+      });
+      console.log("confirm topic");
+      var msg = new ROSLIB.Message({
+        data: 'confirm'
+      });
+      confirmTopic.publish(msg);
+  } 
 
   // Subscribing to a Topic
   // ----------------------
@@ -40,31 +55,13 @@
   });
 </script>
  
-<script type="text/javascript" type="text/javascript">
-  function confirm(){
 
-
-      // Publishing a Topic
-      // ------------------
-
-      var confirmTopic = new ROSLIB.Topic({
-        ros : ros,
-        name : '/confirm',
-        messageType : 'std_msgs/String'
-      });
-      console.log("confirm topic");
-      var msg = 'confirm';
-      confirmTopic.publish(msg);
-  }
-
-  
-</script>
 
 
 <!-- Page Heading/Breadcrumbs -->
 <div class="row">
       <div class="col-lg-12">
-          <h1 class="page-header">Testing</h1>
+          <h1 class="page-header">Confirmation</h1>
           <ol class="breadcrumb">
               <li><a href="/">Home</a>
               </li>
@@ -73,12 +70,20 @@
       </div>
 </div>
 
+{{#if sysMsg.success}}
+<div class="row">
+      <div class="alert alert-success">
+      <strong>Success!</strong>{{sysMsg.content}}
+    </div>
+</div>
+{{/if}}
+
 <div class="row">
       <div class="col-md-10">
           <h3>Confirmation</h3>
-          <p>Sender: {{username}}</p>
-          <p>Receiver: {{receiverName}}</p>
-          <p>Process: {{process}}</p>
+          <p>Sender Name: {{username}}</p>
+          <p>Receiver Name: {{receiverName}}</p>
+          <p id="processStatus">Process Status: </p>
             <form id="testing" name="testing"  method="POST" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-lg-6">
@@ -89,5 +94,17 @@
       </div>
 </div>
 
-
+<script>
+  var doc = document.getElementById('processStatus');
+  if({{process}} == 1)
+    doc.innerHTML = "Process Status: Processing";
+  else
+    doc.innerHTML = "Process Status: Not being processing";
+    
+  //set sumbit display none
+  doc = document.getElementById('submit');
+  if({{confirmed}} == 1)
+    doc.style.display = "none";
+  
+</script>
 

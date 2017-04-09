@@ -20,20 +20,35 @@ router.get('/', function(request, response){
                 } 
                 //need check the rows empty or not
                 console.log(rows);  
-
-                  connection.query('SELECT username as receiver FROM user WHERE uid = ? ', rows[0].receiver, function(error, receiverInfo){
-                    if(error){
-                      console.log(error);
-                      return;
-                    }   
-    
+                if(!rows.length)
+                {
+                    console.log('empty');
                     response.render('confirmation', {
-                      layout: 'layout4',
-                      username: request.session.user_id,
-                      receiverName : receiverInfo[0].receiver,
-                      process : rows[0].processing
+                        layout: 'layout4',
+                        username: request.session.user_id,
+                        // receiverName : 'No ',
+                        process : '0',
+                        confirmed: '1'
+                      });
+                }
+                else
+                  {
+                    console.log('not empty');
+                    connection.query('SELECT username as receiver FROM user WHERE uid = ? ', rows[0].receiver, function(error, receiverInfo){
+                      if(error){
+                        console.log(error);
+                        return;
+                      }   
+      
+                      response.render('confirmation', {
+                        layout: 'layout4',
+                        username: request.session.user_id,
+                        receiverName : receiverInfo[0].receiver,
+                        process : rows[0].processing,
+                        confirmed: '0'
+                      });
                     });
-                  });
+                  }
              });  
           });
         }
@@ -65,7 +80,16 @@ router.post('/',requestBody.single(), function(request, response){
               console.log(error);
               return;
             }
-            //  response.redirect('/');
+            request.session.sysMsg = {
+                success: true,
+                content: "You package is confirmed"
+              };
+             response.redirect('/confirmation');
+              // response.render('confirmation', {
+              //     layout: 'layout4',
+              //     username: request.session.user_id,
+              //     confirmed: '1'
+              //   });
           });
           // response.redirect('/');
         });
