@@ -1079,6 +1079,8 @@ ROS2D.Viewer = function(options) {
   // change Y axis center
   this.scene.y = this.height;
 
+
+
   // add the renderer to the page
   document.getElementById(divID).appendChild(canvas);
 
