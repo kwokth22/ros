@@ -39,7 +39,7 @@ app.use('/accountInfo', accountInfo);
 app.use('/signup', registeration);
 app.use('/usage', usage);
 app.use('/confirmation', confirmation);
-app.use('./processing',processing);
+app.use('/processing',processing);
 app.use('/testing2',testing2);
 app.use('/queue',queue);
 app.use('/combine',combine);

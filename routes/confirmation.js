@@ -84,6 +84,7 @@ router.post('/',requestBody.single(), function(request, response){
                 success: true,
                 content: "You package is confirmed"
               };
+             console.log(request.session.sysMsg)
              response.redirect('/confirmation');
               // response.render('confirmation', {
               //     layout: 'layout4',

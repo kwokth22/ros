@@ -30,7 +30,7 @@
 <!-- Page Heading/Breadcrumbs -->
 <div class="row">
       <div class="col-lg-12">
-          <h1 class="page-header">Processing</h1>
+          <h1 class="page-header">Processing Status</h1>
           <ol class="breadcrumb">
               <li><a href="/">Home</a>
               </li>
@@ -48,27 +48,25 @@
 {{/if}}
 
 <div class="row">
-      <div class="col-md-10">
-          <h3>Confirmation</h3>
+        <div class="col-md-10">
+          <h3>Processing Status</h3>
           <p>Sender Name: {{username}}</p>
-          <p>Receiver Name: {{receiverName}}</p>
-          <p id="processStatus">Process Status: {{process}}</p>
-          <p>Total Number of job: {{count}} </p>
-
+       {{#each result}}
+          <p>Receiver Name: {{this.receiver}}</p>
+          <p id="processStatus">Process Status: {{this.processing}}</p>
+          <p>Total Number of non-processing job: {{this.number}} </p>
       </div>
+      {{/each}}
 </div>
 
 <script>
   var doc = document.getElementById('processStatus');
-  if({{process}} == 1)
+  console.log(doc);
+  {{#each result}}
+  if({{this.processing}} == 1)
     doc.innerHTML = "Process Status: Processing";
   else
     doc.innerHTML = "Process Status: Not being processing";
-    
-  //set sumbit display none
-  doc = document.getElementById('submit');
-  if({{confirmed}} == 1)
-    doc.style.display = "none";
-  
+  {{/each}}
 </script>
 

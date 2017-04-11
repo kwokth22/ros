@@ -13,20 +13,40 @@ router.get('/', function(request, response){
                 return;
               }
               //get receiver and process information
-              connection.query('SELECT sender, receiver,count(*) as number, processing FROM transcation WHERE sender = ? ', userInfo[0].uid, function(error, rows){
+              connection.query('SELECT sender, username as receiver,count(*) as number, processing FROM user,transcation WHERE sender = ? and transcation.receiver = user.uid group by sender', userInfo[0].uid, function(error, rows){
                 if(error){
                   console.log(error);
                   return;
                 } 
+              // console.log("haha");
+              // console.log(rows);
+              // var receiverIDArr = [];
+              // for(var i in rows){
+              //   receiverIDArr.push(rows[i].receiver);
+              // }
+              // console.log(receiverIDArr);
+              // var receiverNameArr =[];
+              // for(var i in rows){
+              //       connection.query('SELECT username as receiverName FROM user WHERE uid = ?',receiverIDArr[i],function(error, result){
+              //         receiverNameArr.push(result.receiverName);
+              //       })
+              // }
+              // console.log('after sql');
+              // console.log(receiverNameArr);
+              // connection.query('SELECT username as receiverName FROM user WHERE uid = ?',rows[0].receiver,function(error, result){
+                // if(error){
+                //   console.log(error);
+                //   return;
+                // }        
                 //need check the rows empty or not
-                //console.log(rows);  
+                console.log(rows);  
                 if(!rows.length)
                 {
                     console.log('empty');
                     response.render('processing', {
                         layout: 'layout4',
                         username: request.session.user_id,
-                        // receiverName : 'No ',
+                        receiverName : 'No package',
                         process : '0',
                         count : 'No package is being process'
                       });
@@ -34,21 +54,30 @@ router.get('/', function(request, response){
                 else
                   {
                     console.log('not empty');
-                    connection.query('SELECT username as receiver FROM user WHERE uid = ? ', rows[0].receiver, function(error, receiverInfo){
-                      if(error){
-                        console.log(error);
-                        return;
-                      }   
-      
+                    // console.log(receiverInfo);
                       response.render('processing', {
                         layout: 'layout4',
                         username: request.session.user_id,
-                        receiverName : receiverInfo[0].receiver,
-                        process : rows[0].processing,
-                        count: rows[0].number
+                        result : rows
                       });
-                    });
+                    // connection.query('SELECT username as receiver FROM user WHERE uid = ? ', rows[0].receiver, function(error, receiverInfo){
+                    //   if(error){
+                    //     console.log(error);
+                    //     return;
+                    //   }   
+                    //   console.log(receiverInfo);
+                    //   response.render('processing', {
+                    //     layout: 'layout4',
+                    //     username: request.session.user_id,
+                    //     result : receiverInfo
+
+                    //     // receiverName : receiverInfo[0].receiver,
+                    //     // process : rows[0].processing,
+                    //     // count: rows[0].number
+                    //   });
+                    // });
                   }
+                // });
              });  
           });
         }
