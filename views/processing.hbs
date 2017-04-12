@@ -20,7 +20,39 @@
   ros.on('close', function() {
     console.log('Connection to websocket server closed.');
   });
+  function process(){
+      // Publishing a Topic for process
+      // ------------------
 
+      var processTopic = new ROSLIB.Topic({
+        ros : ros,
+        name : '/processing',
+        messageType : 'std_msgs/String'
+      });
+      console.log("process topic");
+      var msg = new ROSLIB.Message({
+          data: 'processing'
+      });
+      processTopic.publish(msg);
+  } 
+
+  {{!--// Subscribing to a Topic
+  // ----------------------
+
+  var listener = new ROSLIB.Topic({
+    ros : ros,
+    //topic name
+    name : '/processing',
+    messageType : 'std_msgs/String'
+  });
+
+  listener.subscribe(function(message) {
+    console.log('Received message on ' + listener.name + ': ' + message.data);
+    console.log("finish received");  
+    //post form
+    document.getElementById("submit").click();
+    listener.unsubscribe();
+  });--}}
 
 </script>
  
@@ -65,11 +97,10 @@
           {{#each receiverName}}
           <option value="{{this.tid}}">{{this.tid}}</option>
           {{/each}}
-        </select>
-        
+        </select>       
             <div class="row">
                 <div class="col-lg-6">
-                <button id="submit" type="submit" class="btn btn-primary">Confirm</button>
+                <button id="submit" type="submit" onclick="process()" class="btn btn-primary">Process</button>
                 </div>
             </div>
         </form>

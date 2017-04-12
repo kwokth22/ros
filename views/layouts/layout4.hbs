@@ -226,7 +226,7 @@
         "lessText"  : "Less",
     });
     </script>
-    <script>
+    <script><script>
       //testing broswer capability
       if (!('Notification' in window)) {
         document.getElementById('wn-unsupported').classList.remove('hidden');
@@ -245,11 +245,20 @@
           if (event.target.id === 'button-wn-show-preset') {
             title = 'Package received';
             options = {
-              body: 'Delivery success',
+              body: 'Delivery success and confirm by receiver',
               tag: 'preset',
               icon: '../img/icon.png'
             };
           } 
+          else{
+            console.log('process tilte set')
+            title = 'Your Package is being processed';
+            options = {
+              body: 'Start processing your package',
+              {{!--tag: 'preset',--}}
+              icon: '../img/icon.png'
+            };
+          }
 
           Notification.requestPermission(function() {
             var notification = new Notification(title, options);
@@ -262,6 +271,7 @@
         }
 
         document.getElementById('button-wn-show-preset').addEventListener('click', notifyUser);
+        document.getElementById('button-wn-show-preset2').addEventListener('click', notifyUser);
 
       }
 </script>
