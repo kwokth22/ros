@@ -61,21 +61,17 @@ router.get('/', function(request, response){
 
 // //Handling POST action 
 router.post('/',requestBody.single(), function(request, response){
+      console.log(Number(request.body.testing));
+      var temp = Number(request.body.tid);
       //Get the user's id
       connection.query('SELECT uid FROM user WHERE username = ?', request.session.user_id, function(error, userInfo){
         if(error){
           console.log(error);
           return;
         }
-       connection.query('SELECT receiver FROM transcation WHERE sender = ? and processing = 0', userInfo[0].uid, function(error, rows){
-        if(error){
-          console.log("get receiver error");
-          console.log(error);
-          return;
-        } 
         // console.log(rows[0].receiver);
           //Update the information to the database
-          connection.query('UPDATE transcation SET processing = 1 WHERE sender = ? and receiver = ? and tid = ?',[userInfo[0].uid, rows[0].receiver] , function(error, result){
+          connection.query('UPDATE transcation SET processing = 1 WHERE sender = ? and tid = ?',[userInfo[0].uid, temp] , function(error, result){
             if(error){
               console.log("update error")
               console.log(error);
@@ -83,17 +79,10 @@ router.post('/',requestBody.single(), function(request, response){
             }
             request.session.sysMsg = {
                 success: true,
-                content: "You package is confirmed"
+                content: "You package is being processed"
               };
-             response.redirect('/confirmation');
-              // response.render('confirmation', {
-              //     layout: 'layout4',
-              //     username: request.session.user_id,
-              //     confirmed: '1'
-              //   });
+             response.redirect('/processing');
           });
-          // response.redirect('/');
-        });
       });
 });
 

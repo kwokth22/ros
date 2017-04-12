@@ -58,17 +58,23 @@
           <p>Total Number of non-processing job: {{count}} </p>
       </div>
       <div class="col-md-10">
+        <h3>Select the transcation you want to start</h3>
+        <label for="sel1">Select the transcation</label>
+        <form id="tid" name="tid"  method="POST" enctype="multipart/form-data">
+        <select class="form-control" id="tid" name="tid">
+          {{#each receiverName}}
+          <option value="{{this.tid}}">{{this.tid}}</option>
+          {{/each}}
+        </select>
+        
+            <div class="row">
+                <div class="col-lg-6">
+                <button id="submit" type="submit" class="btn btn-primary">Confirm</button>
+                </div>
+            </div>
+        </form>
       </div>
 </div>
 
-{{!--<script>
-  var doc = document.getElementById('processStatus');
-  console.log(doc);
-  {{#each tid}}
-  if({{this.processing}} == 1)
-    doc.innerHTML = "Process Status: Processing";
-  else
-    doc.innerHTML = "Process Status: Not being processing";
-  {{/each}}
-</script>--}}
+
 
