@@ -1,0 +1,102 @@
+<script type="text/javascript" src="http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+<script type="text/javascript" src="http://cdn.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+
+<script type="text/javascript" type="text/javascript">
+  // Connecting to ROS
+  // -----------------
+
+  var ros = new ROSLIB.Ros({
+    url : 'ws://localhost:9090'
+  });
+
+  ros.on('connection', function() {
+    console.log('Connected to websocket server.');
+  });
+
+  ros.on('error', function(error) {
+    console.log('Error connecting to websocket server: ', error);
+  });
+
+  ros.on('close', function() {
+    console.log('Connection to websocket server closed.');
+  });
+  function confirm(){
+      // Publishing a Topic for confirm
+      // ------------------
+
+      var confirmTopic = new ROSLIB.Topic({
+        ros : ros,
+        name : '/confirm',
+        messageType : 'std_msgs/String'
+      });
+      console.log("confirm topic");
+      var msg = new ROSLIB.Message({
+        data: 'confirm'
+      });
+      confirmTopic.publish(msg);
+  } 
+
+  // Subscribing to a Topic
+  // ----------------------
+
+  var listener = new ROSLIB.Topic({
+    ros : ros,
+    //topic name
+    name : '/confirm',
+    messageType : 'std_msgs/String'
+  });
+
+  listener.subscribe(function(message) {
+    console.log('Received message on ' + listener.name + ': ' + message.data);
+    console.log("finish received");  
+    //post form
+    document.getElementById("submit").click();
+    listener.unsubscribe();
+  });
+</script>
+ 
+
+
+
+<!-- Page Heading/Breadcrumbs -->
+<div class="row">
+      <div class="col-lg-12">
+          <h1 class="page-header">Adding Transcation</h1>
+          <ol class="breadcrumb">
+              <li><a href="/">Home</a>
+              </li>
+              <li class="active">Adding Transcation</li>
+          </ol>
+      </div>
+</div>
+
+{{#if sysMsg.success}}
+<div class="row">
+      <div class="alert alert-success">
+      <strong>Success!</strong>{{sysMsg.content}}
+    </div>
+</div>
+{{/if}}
+
+<div class="row">
+      <div class="col-md-10">
+          <h3>New Transcation</h3>
+          <p>Sender Name: {{username}}</p>
+          <p>Receiver Name: </p>
+            <form id="rid" name="rid"  method="POST" enctype="multipart/form-data">
+            <select class="form-control" id="rid" name="rid">
+              {{#each receiverName}}
+              <option value="{{this.uid}}">{{this.receiverName}}</option>
+              {{/each}}
+            </select>
+            <br>       
+                <div class="row">
+                    <div class="col-lg-6">
+                    <button id="submit" type="submit" onclick="process()" class="btn btn-primary">Process</button>
+                    </div>
+                </div>
+            </form>
+      </div>
+</div>
+
+
