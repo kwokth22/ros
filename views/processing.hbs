@@ -49,24 +49,26 @@
 
 <div class="row">
         <div class="col-md-10">
-          <h3>Processing Status</h3>
+          <h3>Processing Status -- Unprocessed transcation</h3>
           <p>Sender Name: {{username}}</p>
-       {{#each result}}
-          <p>Receiver Name: {{this.receiver}}</p>
-          <p id="processStatus">Process Status: {{this.processing}}</p>
-          <p>Total Number of non-processing job: {{this.number}} </p>
+        {{#each receiverName}}
+          <p>Transcation Id: {{this.tid}} &nbsp
+          ReceiverName: {{this.receiverName}}</p>
+        {{/each}}
+          <p>Total Number of non-processing job: {{count}} </p>
       </div>
-      {{/each}}
+      <div class="col-md-10">
+      </div>
 </div>
 
-<script>
+{{!--<script>
   var doc = document.getElementById('processStatus');
   console.log(doc);
-  {{#each result}}
+  {{#each tid}}
   if({{this.processing}} == 1)
     doc.innerHTML = "Process Status: Processing";
   else
     doc.innerHTML = "Process Status: Not being processing";
   {{/each}}
-</script>
+</script>--}}
 

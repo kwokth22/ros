@@ -13,40 +13,21 @@ router.get('/', function(request, response){
                 return;
               }
               //get receiver and process information
-              connection.query('SELECT sender, username as receiver,count(*) as number, processing FROM user,transcation WHERE sender = ? and transcation.receiver = user.uid group by sender', userInfo[0].uid, function(error, rows){
+              connection.query('SELECT tid, sender,count(*) as number, processing FROM transcation WHERE sender = ? and confirmation = 0 and processing = 0', userInfo[0].uid, function(error, count){
                 if(error){
                   console.log(error);
                   return;
                 } 
-              // console.log("haha");
-              // console.log(rows);
-              // var receiverIDArr = [];
-              // for(var i in rows){
-              //   receiverIDArr.push(rows[i].receiver);
-              // }
-              // console.log(receiverIDArr);
-              // var receiverNameArr =[];
-              // for(var i in rows){
-              //       connection.query('SELECT username as receiverName FROM user WHERE uid = ?',receiverIDArr[i],function(error, result){
-              //         receiverNameArr.push(result.receiverName);
-              //       })
-              // }
-              // console.log('after sql');
-              // console.log(receiverNameArr);
-              // connection.query('SELECT username as receiverName FROM user WHERE uid = ?',rows[0].receiver,function(error, result){
-                // if(error){
-                //   console.log(error);
-                //   return;
-                // }        
+      
                 //need check the rows empty or not
-                console.log(rows);  
-                if(!rows.length)
+                console.log(count);  
+                if(!count.length)
                 {
                     console.log('empty');
                     response.render('processing', {
                         layout: 'layout4',
                         username: request.session.user_id,
-                        receiverName : 'No package',
+                        receiverName : 'No package is deliver to other user',
                         process : '0',
                         count : 'No package is being process'
                       });
@@ -54,30 +35,21 @@ router.get('/', function(request, response){
                 else
                   {
                     console.log('not empty');
-                    // console.log(receiverInfo);
-                      response.render('processing', {
-                        layout: 'layout4',
-                        username: request.session.user_id,
-                        result : rows
-                      });
-                    // connection.query('SELECT username as receiver FROM user WHERE uid = ? ', rows[0].receiver, function(error, receiverInfo){
-                    //   if(error){
-                    //     console.log(error);
-                    //     return;
-                    //   }   
-                    //   console.log(receiverInfo);
-                    //   response.render('processing', {
-                    //     layout: 'layout4',
-                    //     username: request.session.user_id,
-                    //     result : receiverInfo
-
-                    //     // receiverName : receiverInfo[0].receiver,
-                    //     // process : rows[0].processing,
-                    //     // count: rows[0].number
-                    //   });
-                    // });
+                    connection.query('SELECT username as receiverName ,temp.tid as tid FROM user, (SELECT receiver, tid  FROM transcation WHERE sender = ? and confirmation = 0 and processing = 0) as temp  WHERE user.uid = temp.receiver', userInfo[0].uid, function(error, result){
+                      if(error){
+                        console.log(error);
+                        return;
+                      }
+                    console.log(result);   
+                    response.render('processing', {
+                            layout: 'layout4',
+                            username: request.session.user_id,
+                            count: count[0].number,                        
+                            receiverName: result
+                        });
+                      // });
+                    });
                   }
-                // });
              });  
           });
         }
@@ -88,42 +60,42 @@ router.get('/', function(request, response){
 
 
 // //Handling POST action 
-// router.post('/',requestBody.single(), function(request, response){
-//       //Get the user's id
-//       connection.query('SELECT uid FROM user WHERE username = ?', request.session.user_id, function(error, userInfo){
-//         if(error){
-//           console.log(error);
-//           return;
-//         }
-//        connection.query('SELECT receiver FROM transcation WHERE sender = ? and processing = 1', userInfo[0].uid, function(error, rows){
-//         if(error){
-//           console.log("get receiver error");
-//           console.log(error);
-//           return;
-//         } 
-//         // console.log(rows[0].receiver);
-//           //Update the information to the database
-//           connection.query('UPDATE transcation SET confirmation = 1 WHERE sender = ? and receiver = ? and confirmation = 0 and processing = 1',[userInfo[0].uid, rows[0].receiver] , function(error, result){
-//             if(error){
-//               console.log("update error")
-//               console.log(error);
-//               return;
-//             }
-//             request.session.sysMsg = {
-//                 success: true,
-//                 content: "You package is confirmed"
-//               };
-//              response.redirect('/confirmation');
-//               // response.render('confirmation', {
-//               //     layout: 'layout4',
-//               //     username: request.session.user_id,
-//               //     confirmed: '1'
-//               //   });
-//           });
-//           // response.redirect('/');
-//         });
-//       });
-// });
+router.post('/',requestBody.single(), function(request, response){
+      //Get the user's id
+      connection.query('SELECT uid FROM user WHERE username = ?', request.session.user_id, function(error, userInfo){
+        if(error){
+          console.log(error);
+          return;
+        }
+       connection.query('SELECT receiver FROM transcation WHERE sender = ? and processing = 0', userInfo[0].uid, function(error, rows){
+        if(error){
+          console.log("get receiver error");
+          console.log(error);
+          return;
+        } 
+        // console.log(rows[0].receiver);
+          //Update the information to the database
+          connection.query('UPDATE transcation SET processing = 1 WHERE sender = ? and receiver = ? and tid = ?',[userInfo[0].uid, rows[0].receiver] , function(error, result){
+            if(error){
+              console.log("update error")
+              console.log(error);
+              return;
+            }
+            request.session.sysMsg = {
+                success: true,
+                content: "You package is confirmed"
+              };
+             response.redirect('/confirmation');
+              // response.render('confirmation', {
+              //     layout: 'layout4',
+              //     username: request.session.user_id,
+              //     confirmed: '1'
+              //   });
+          });
+          // response.redirect('/');
+        });
+      });
+});
 
 
 module.exports = router;
