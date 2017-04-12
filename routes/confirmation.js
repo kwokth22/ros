@@ -36,7 +36,7 @@ router.get('/', function(request, response){
                 else
                   {
                     console.log('not empty');
-                    connection.query('SELECT username as receiver FROM user WHERE uid = ? ', rows[0].receiver, function(error, receiverInfo){
+                    connection.query('SELECT username as receiverName ,temp.tid as tid FROM user, (SELECT receiver, tid  FROM transcation WHERE sender = ? and confirmation = 0 and processing = 1) as temp  WHERE user.uid = temp.receiver ORDER BY tid ASC', userInfo[0].uid, function(error, receiverInfo){
                       if(error){
                         console.log(error);
                         return;
@@ -45,8 +45,8 @@ router.get('/', function(request, response){
                       response.render('confirmation', {
                         layout: 'layout4',
                         username: request.session.user_id,
-                        receiverName : receiverInfo[0].receiver,
-                        process : rows[0].processing,
+                        receiverName : receiverInfo,
+                        process : '1',
                         confirmed: '0',
                         sysMsg: request.session.sysMsg
                       });
@@ -64,21 +64,15 @@ router.get('/', function(request, response){
 
 //Handling POST action 
 router.post('/',requestBody.single(), function(request, response){
+      var temp = Number(request.body.tid);
       //Get the user's id
       connection.query('SELECT uid FROM user WHERE username = ?', request.session.user_id, function(error, userInfo){
         if(error){
           console.log(error);
           return;
         }
-       connection.query('SELECT receiver FROM transcation WHERE sender = ? and processing = 1', userInfo[0].uid, function(error, rows){
-        if(error){
-          console.log("get receiver error");
-          console.log(error);
-          return;
-        } 
-        // console.log(rows[0].receiver);
           //Update the information to the database
-          connection.query('UPDATE transcation SET confirmation = 1 WHERE sender = ? and receiver = ? and confirmation = 0 and processing = 1',[userInfo[0].uid, rows[0].receiver] , function(error, result){
+          connection.query('UPDATE transcation SET confirmation = 1 WHERE sender = ? and tid = ? ',[userInfo[0].uid, temp] , function(error, result){
             if(error){
               console.log("update error")
               console.log(error);
@@ -97,7 +91,7 @@ router.post('/',requestBody.single(), function(request, response){
               //   });
           });
           // response.redirect('/');
-        });
+ 
       });
 });
 

@@ -73,29 +73,52 @@
 
 <div class="row">
       <div class="col-md-10">
-          <h3>Confirmation</h3>
+          <h3>Confirmation for processing package</h3>
           <p>Sender Name: {{username}}</p>
-          <p>Receiver Name: {{receiverName}}</p>
-          <p id="processStatus">Process Status: </p>
+          {{#each receiverName}}
+          <p>Transcation Id: {{this.tid}} &nbsp
+          ReceiverName: {{this.receiverName}}</p>
+          {{/each}}
+      </div>
+          <div class="col-md-10">
+            <h3>Select the transcation you want to confirm</h3>
+            <label for="sel1">Select by choosing receiver </label>
+            <form id="tid" name="tid"  method="POST" enctype="multipart/form-data">
+            <select class="form-control" id="tid" name="tid">
+              {{#each receiverName}}
+              <option value="{{this.tid}}">{{this.receiverName}}</option>
+              {{/each}}
+            </select>   
+            <br>    
+                <div class="row">
+                    <div class="col-lg-6">
+                    <button id="submit" type="submit" onclick="confirm()" class="btn btn-primary">Confirm</button>
+                    </div>
+                </div>
+            </form>
+          </div>
+          {{!--<p id="processStatus">Process Status: </p>--}}
+
+{{!--
             <form id="testing" name="testing"  method="POST" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-lg-6">
                 <button id="submit" onclick="confirm()" type="submit" class="btn btn-primary">Confirm</button>
                 </div>
             </div>
-          </form>
-      </div>
+          </form>--}}
+      
 </div>
 
 <script>
-  var doc = document.getElementById('processStatus');
+  {{!--var doc = document.getElementById('processStatus');
   if({{process}} == 1)
     doc.innerHTML = "Process Status: Processing";
   else
-    doc.innerHTML = "Process Status: Not being processing";
+    doc.innerHTML = "Process Status: Not being processing";--}}
     
   //set sumbit display none
-  doc = document.getElementById('submit');
+  var doc = document.getElementById('submit');
   if({{confirmed}} == 1)
     doc.style.display = "none";
   

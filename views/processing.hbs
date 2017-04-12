@@ -84,11 +84,11 @@
       </div>
       <div class="col-md-10">
         <h3>Select the transcation you want to start</h3>
-        <label for="sel1">Select the transcation</label>
+        <label for="sel1">Select by choosing receiver</label>
         <form id="tid" name="tid"  method="POST" enctype="multipart/form-data">
         <select class="form-control" id="tid" name="tid">
           {{#each receiverName}}
-          <option value="{{this.tid}}">{{this.tid}}</option>
+          <option value="{{this.tid}}">{{this.receiverName}}</option>
           {{/each}}
         </select>   
         <br>    
