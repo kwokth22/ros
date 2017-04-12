@@ -22,7 +22,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('.hbs', exphbs({defaultLayout: 'layout',extname: '.hbs'}));
 app.set('view engine', '.hbs');
 
-
+var home = require('./routes/home');
 var login = require('./routes/login');
 var accountInfo = require('./routes/accountInfo');
 var registeration = require('./routes/signup');
@@ -35,6 +35,8 @@ var queue = require('./routes/queue');
 var combine = require('./routes/combine');
 //Pages that are require for dynamic rendering
 
+
+app.use('/',home)
 app.use('/login', login);
 app.use('/accountInfo', accountInfo);
 app.use('/signup', registeration);
@@ -47,13 +49,13 @@ app.use('/queue',queue);
 app.use('/combine',combine);
 
 
-//Pages that are required for static rendering
-app.get('/', function(request, response){
-    response.render('home',{
-      layout: 'layout',
-      username: request.session.user_id
-    });
-});
+// //Pages that are required for static rendering
+// app.get('/', function(request, response){
+//     response.render('home',{
+//       layout: 'layout',
+//       username: request.session.user_id
+//     });
+// });
 
 //Handling url http://hostname/about
 app.get('/about', function(request, response){

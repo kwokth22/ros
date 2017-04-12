@@ -28,8 +28,10 @@ router.get('/', function(request, response){
                         username: request.session.user_id,
                         // receiverName : 'No ',
                         process : '0',
-                        confirmed: '1'
+                        confirmed: '1',
+                        sysMsg: request.session.sysMsg
                       });
+                      delete request.session.sysMsg;
                 }
                 else
                   {
@@ -45,8 +47,10 @@ router.get('/', function(request, response){
                         username: request.session.user_id,
                         receiverName : receiverInfo[0].receiver,
                         process : rows[0].processing,
-                        confirmed: '0'
+                        confirmed: '0',
+                        sysMsg: request.session.sysMsg
                       });
+                      delete request.session.sysMsg;
                     });
                   }
              });  

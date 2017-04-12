@@ -29,8 +29,10 @@ router.get('/', function(request, response){
                         username: request.session.user_id,
                         receiverName : 'No package is deliver to other user',
                         process : '0',
-                        count : 'No package is being process'
+                        count : 'No package is being process',
+                        sysMsg: request.session.sysMsg
                       });
+                      delete request.session.sysMsg;
                 }
                 else
                   {
@@ -45,8 +47,10 @@ router.get('/', function(request, response){
                             layout: 'layout4',
                             username: request.session.user_id,
                             count: count[0].number,                        
-                            receiverName: result
+                            receiverName: result,
+                            sysMsg: request.session.sysMsg
                         });
+                        delete request.session.sysMsg;
                       // });
                     });
                   }

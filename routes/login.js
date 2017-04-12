@@ -49,7 +49,7 @@ app.post('/',upload_avatar.single(), function(request, response){
     request.session.user_id = login_info.username;
     request.session.sysMsg = {
         success: true,
-        content: login_info.username+" Login Successfully"};
+        content: login_info.username+" have been login "};
     response.redirect("/");
   });
 });

@@ -23,8 +23,10 @@ router.get('/', function(request, response){
                 response.render('adding', {
                     layout: 'layout',
                     username: request.session.user_id,
-                    receiverName : rows
+                    receiverName : rows,
+                    sysMsg: request.session.sysMsg
                 });
+                delete request.session.sysMsg;
              });  
           });
         }
@@ -56,6 +58,7 @@ router.post('/',requestBody.single(), function(request, response){
                 content: "Transcation added"
               };
              response.redirect('/adding');
+             return;
           });
       });
 });
