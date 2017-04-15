@@ -145,8 +145,8 @@ NAV2D.Navigator = function(options) {
 
   // marker for the robot
   var robotMarker = new ROS2D.NavigationArrow({
-    size : 6,
-    strokeSize : 2,
+    size : 40,
+    strokeSize : 8,
     fillColor : createjs.Graphics.getRGB(255, 128, 0, 0.66),
     pulse : true
   });
@@ -156,32 +156,24 @@ NAV2D.Navigator = function(options) {
   var initScaleSet = false;
 
   // setup a listener for the robot pose
-  // var poseListener = new ROSLIB.Topic({
-  //   ros : ros,
-  //   name : '/slam_out_pose',
-  //   messageType : 'geometry_msgs/PoseStamped',
-  //   throttle_rate : 100
-  // });
-
-    var poseListener = new ROSLIB.Topic({
+  var poseListener = new ROSLIB.Topic({
     ros : ros,
-    name : '/robot0/pose',
-    messageType : 'geometry_msgs/PoseStamped',
+    name : '/robot_pose',
+    messageType : 'geometry_msgs/Pose',
     throttle_rate : 100
   });
   poseListener.subscribe(function(pose) {
-    console.log(pose);
     // update the robots position on the map
-    robotMarker.x = pose.pose.position.x;
-    robotMarker.y = -pose.pose.position.y;
+    robotMarker.x = pose.position.x;
+    robotMarker.y = -pose.position.y;
     if (!initScaleSet) {
       robotMarker.scaleX = 1.0 / stage.scaleX;
       robotMarker.scaleY = 1.0 / stage.scaleY;
       initScaleSet = true;
     }
-    
+
     // change the angle
-    robotMarker.rotation = stage.rosQuaternionToGlobalTheta(pose.pose.orientation);
+    robotMarker.rotation = stage.rosQuaternionToGlobalTheta(pose.orientation);
 
     robotMarker.visible = true;
   });
@@ -271,20 +263,20 @@ NAV2D.Navigator = function(options) {
         xDelta =  goalPosVec3.x - positionVec3.x;
         yDelta =  goalPosVec3.y - positionVec3.y;
         
-        // var returnPosX = goalPosVec3.x;
-        // var returnPosY = goalPosVec3.y;
-        // console.log("Return x");
-        // console.log(returnPosX);
-        // console.log("return Y");
-        // console.log(returnPosY);
+        var returnPosX = goalPosVec3.x;
+        var returnPosY = goalPosVec3.y;
+        console.log("Return x");
+        console.log(returnPosX);
+        console.log("return Y");
+        console.log(returnPosY);
 
 
-        // var doc = document.getElementById('goalDiv');
-        // // var goalCount = 1;
-        // // doc.innerHTML += "Number of Goal "+ goalCount;
-        // doc.innerHTML += "Position X "+returnPosX;
-        // doc.innerHTML += "</br>";
-        // doc.innerHTML += "Position Y "+returnPosY;
+        var doc = document.getElementById('goalDiv');
+        // var goalCount = 1;
+        // doc.innerHTML += "Number of Goal "+ goalCount;
+        doc.innerHTML += "Position X "+returnPosX;
+        doc.innerHTML += "</br>";
+        doc.innerHTML += "Position Y "+returnPosY;
         // goalCount++;
         // var doc = document.getElementById("x");
         // doc.innerHTML = "Clicked Goal Position X: " + returnPosX;

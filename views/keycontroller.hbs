@@ -8,7 +8,7 @@
 <script type="text/javascript">
       // Connect to ROS.
     var ros = new ROSLIB.Ros({
-      url : 'ws://localhost:9090'
+      url : 'ws://172.18.11.132:9090'
     });
         // Subscribing to a Topic for noticfication
     // ----------------------
@@ -50,6 +50,7 @@
     });
     cmdVel.publish(twist1);
     cmdVel.publish(twist2);
+    console.log('up');
   }
   function down() {
     var cmdVel = new ROSLIB.Topic({
@@ -244,7 +245,7 @@
       //    path: pose
       //  });
       viewer.addObject(path);
-      viewer.addObject(navArrow);
+      {{!--viewer.addObject(navArrow);--}}
     });
     // viewer.scene.add(path);
     // Scale the canvas to fit to the map
@@ -304,17 +305,6 @@
       <div class="col-md-5">
         <h2>Reset the map</h2>
          <button id="reset" type="reset" class="btn btn-primary" onclick="resetHec()">Reset</button>
-      </div>
-      <div class="col-md-5">
-         <h2>Store the Goal</h2>
-         <form id="goal" name="goal" method="POST" enctype="multipart/form-data">
-         <div name="goal" id="goalDiv">
-            
-         </div>
-         {{!--<p id="x">Clicked Goal Poistion X: </p>--}}
-         {{!--<p id="y">Clicked Goal Poistion Y: </p>--}}
-         <button id="submit" type="submit" class="btn btn-primary" style="display: none;">Submit</button>
-         </form>
       </div>
 </div>
 
