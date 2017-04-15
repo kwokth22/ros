@@ -33,6 +33,8 @@ var adding = require('./routes/adding');
 var testing2 = require('./routes/testing2');
 var queue = require('./routes/queue');
 var combine = require('./routes/combine');
+var controller = require('./routes/controller');
+var keycontroller = require('./routes/keycontroller');
 //Pages that are require for dynamic rendering
 
 
@@ -47,7 +49,8 @@ app.use('/adding',adding);
 app.use('/testing2',testing2);
 app.use('/queue',queue);
 app.use('/combine',combine);
-
+app.use('/controller',controller);
+app.use('/keycontroller',keycontroller);
 
 // //Pages that are required for static rendering
 // app.get('/', function(request, response){
@@ -81,17 +84,17 @@ app.get('/status',function(request, response){
 
 
 
-app.get('/controller', function(request, response){
-    if(request.session.user_id){
-       response.render('controller', {
-           layout: 'layout4',
-           username: request.session.user_id,
-      });
-    }
-    else{
-          response.redirect('/');
-    }  
-});
+// app.get('/controller', function(request, response){
+//     if(request.session.user_id){
+//        response.render('controller', {
+//            layout: 'layout4',
+//            username: request.session.user_id,
+//       });
+//     }
+//     else{
+//           response.redirect('/');
+//     }  
+// });
 
 //Handling url http://hostname/logout
 app.get('/logout', function(request, response){

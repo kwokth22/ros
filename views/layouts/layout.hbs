@@ -9,7 +9,7 @@
   // -----------------
 
   var ros = new ROSLIB.Ros({
-    url : 'ws://localhost:9090'
+    url : 'ws://172.18.11.132:9090'
   });
 
   ros.on('connection', function() {
@@ -140,6 +140,9 @@
                             </li>
                             <li>
                                 <a href="/controller">Robot Controller</a>
+                            </li> 
+                           <li>
+                                <a href="/keycontroller">Key Controller</a>
                             </li> 
                             <li>
                                 <a href="/adding">Add Transcation</a>

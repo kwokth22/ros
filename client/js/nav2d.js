@@ -118,7 +118,7 @@ NAV2D.Navigator = function(options) {
 
     // create a marker for the goal
     var goalMarker = new ROS2D.NavigationArrow({
-      size : 15,
+      size : 8,
       strokeSize : 1,
       fillColor : createjs.Graphics.getRGB(255, 64, 128, 0.66),
       pulse : true
@@ -145,8 +145,8 @@ NAV2D.Navigator = function(options) {
 
   // marker for the robot
   var robotMarker = new ROS2D.NavigationArrow({
-    size : 50,
-    strokeSize : 10,
+    size : 40,
+    strokeSize : 8,
     fillColor : createjs.Graphics.getRGB(255, 128, 0, 0.66),
     pulse : true
   });
@@ -221,7 +221,7 @@ NAV2D.Navigator = function(options) {
           var currentPosVec3 = new ROSLIB.Vector3(currentPos);
 
           orientationMarker = new ROS2D.NavigationArrow({
-            size : 25,
+            size : 10,
             strokeSize : 1,
             fillColor : createjs.Graphics.getRGB(0, 255, 0, 0.66),
             pulse : false
