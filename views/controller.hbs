@@ -10,6 +10,7 @@
     var ros = new ROSLIB.Ros({
       url : 'ws://localhost:9090'
     });
+    //for stop and reset the map function
     function stop(){
         var cmdVel = new ROSLIB.Topic({
         ros : ros,
@@ -34,6 +35,18 @@
         data : 'reset'
       });
       cmdVel2.publish(twist2);
+    }
+    function save(){
+        var cmdVel3 = new ROSLIB.Topic({
+        ros : ros,
+        name : '/syscommand',
+        messageType : 'std_msgs/String'
+      });
+      console.log('save');
+      var twist3 = new ROSLIB.Message({
+        data : 'savegeotiff'
+      });
+      cmdVel3.publish(twist3);
     }
   /**
    * Setup all GUI elements when the page is loaded.
@@ -189,30 +202,6 @@
           </div>
           <div id="nav"></div>
       </div>
-      {{!--<div class="col-md-5">
-                <h2>Press any key to control robot</h2>
-                <div class="btn-group btn-group-justified">
-                    <a href="#" class="btn btn-default" onclick="leftUp()"><div><i class="fa fa-undo" aria-hidden="true"></i></div> Left Up</a>
-                    <a href="#" class="btn btn-default" onclick="up()"><div><i class="fa fa-arrow-up" aria-hidden="true"></i></div>Up</a>
-                    <a href="#" class="btn btn-default" onclick="rightUp()"><div><i class="fa fa-repeat" aria-hidden="true"></i></div>Right Up</a>
-                </div>
-
-                <div class="btn-group btn-group-justified">
-                    <style>
-                    div#myDiv {
-                        -ms-transform: rotate(180deg); /* IE 9 */
-                        -webkit-transform: rotate(180deg); /* Safari */
-                        transform: rotate(180deg); /* Standard syntax */
-                    }
-                    </style>
-                        <a href="#" class="btn btn-default" onclick="leftDown()"><div id ="myDiv"><i class="fa fa-undo" aria-hidden="true"> </i></div>Left Down</a>
-                        <a href="#" class="btn btn-default" onclick="down()"><div><i class="fa fa-arrow-down" aria-hidden="true"></i></div>Down</a>
-                        <a href="#" class="btn btn-default" onclick="rightDown()"><div id ="myDiv"><i class="fa fa-repeat" aria-hidden="true"> </i></div>Right Down</a>
-                    </div>
-                <div class="btn-group btn-group-justified">
-                    <a href="#" class="btn btn-default" onclick="stop()"><div><i class="fa fa-stop" aria-hidden="true"></i></div>Stop</a>
-                </div>    
-      </div>--}}
       <div class="col-md-5">
         <h2>Stop the robot</h2>
          <button id="stop" type="stop" class="btn btn-primary" onclick="stop()">Stop</button>
@@ -221,7 +210,10 @@
         <h2>Reset the map</h2>
          <button id="reset" type="reset" class="btn btn-primary" onclick="resetHec()">Reset</button>
       </div>
-
+      <div class="col-md-5">
+        <h2>Save the map</h2>
+         <button id="reset" type="reset" class="btn btn-primary" onclick="save()">Save</button>
+      </div>
 
 
       <div class="col-md-5">
