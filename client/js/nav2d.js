@@ -163,9 +163,9 @@ NAV2D.Navigator = function(options) {
   //   throttle_rate : 100
   // });
 
-    var poseListener = new ROSLIB.Topic({
+  var poseListener = new ROSLIB.Topic({
     ros : ros,
-    name : '/robot0/pose',
+    name : '/slam_out_pose',
     messageType : 'geometry_msgs/PoseStamped',
     throttle_rate : 100
   });

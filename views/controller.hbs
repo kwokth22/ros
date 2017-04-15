@@ -8,7 +8,7 @@
 <script type="text/javascript">
       // Connect to ROS.
     var ros = new ROSLIB.Ros({
-      url : 'ws://localhost:9090'
+      url : 'ws://172.18.11.132:9090'
     });
     //for stop and reset the map function
     function stop(){
@@ -56,10 +56,6 @@
     var buttonDiv = document.getElementById('buttonDiv');
     buttonDiv.style.display = 'none';
 
-    {{!--// Connect to ROS.
-    var ros = new ROSLIB.Ros({
-      url : 'ws://localhost:9090'
-    });--}}
 
     // Create the main viewer.
     var viewer = new ROS2D.Viewer({
@@ -109,12 +105,12 @@
       continuous : true
     });--}}
 
-        var nav = NAV2D.OccupancyGridClientNav({
+    var nav = NAV2D.OccupancyGridClientNav({
       ros : ros,   
       rootObject : viewer.scene,
       viewer : viewer,
       serverName : '/move_base',
-      map_topic : '/gmapping/map',
+      map_topic : 'map',
       actionName : '/move_base/goal',
       withOrientation : true,
       continuous : true
