@@ -109,10 +109,13 @@
     var buttonDiv = document.getElementById('buttonDiv');
     buttonDiv.style.display = 'none';
     // Connect to ROS.
-    var ros = new ROSLIB.Ros({
+    {{!--var ros = new ROSLIB.Ros({
       url : 'ws://172.18.11.132:9090'
-    });
+    });--}}
 
+    var ros = new ROSLIB.Ros({
+      url : 'ws://localhost:9090'
+    });
     ros.on('connection', function() {
         var element = document.getElementById("status");
         element.innerHTML = "ROS Bridge Status: OK";
@@ -167,15 +170,23 @@
         rootObject: viewer.scene
     });
 
-    // Setup the map client.
+    {{!--// Setup the map client.
     var gridClient = new ROS2D.OccupancyGridClient({
       ros : ros,
       rootObject : viewer.scene,
       topic : '/map',
       // Use this property in case of continuous updates			
       continuous: true
-    });
+    });--}}
 
+    // Setup the map client.
+    var gridClient = new ROS2D.OccupancyGridClient({
+      ros : ros,
+      rootObject : viewer.scene,
+      topic : '/gmapping/map',
+      // Use this property in case of continuous updates			
+      continuous: true
+    });
     var myimage = viewer.scene.canvas;//document.getElementById("map");
     if (myimage.addEventListener) {
         // IE9, Chrome, Safari, Opera
@@ -278,9 +289,9 @@
           <h3>ROS Bridge Status: </h3>
           <hr>
           <p id=status></p>
-          <h3>Robot Status</h3>
+          {{!--<h3>Robot Status</h3>
           <hr>
-          <p id=rstatus>Robot Status: </p>
+          <p id=rstatus>Robot Status: </p>--}}
           <h3>Delivery Status</h3>
           <hr>
           <p id=dstatus> Delivery status: Not finish</p>
