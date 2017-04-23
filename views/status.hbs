@@ -10,96 +10,6 @@
 <script type="text/javascript" src="../js/nav2d.js"></script>
 
 
- {{!--<script type="text/javascript" type="text/javascript">
-    // Connecting to ROS
-    // -----------------
-    var ros = new ROSLIB.Ros({
-        url : 'ws://172.18.4.28:9090'
-    });
-    ros.on('connection', function() {
-        var element = document.getElementById("status");
-        element.innerHTML = "ROS Bridge Status: OK";
-        console.log('Connected to websocket server.');
-    });
-    ros.on('error', function(error) {
-        var element = document.getElementById("status");
-        element.innerHTML = "ROS Bridge Status: ERROR";
-        console.log('Error connecting to websocket server: ', error);
-    });
-    ros.on('close', function() {
-        var element = document.getElementById("status");
-        element.innerHTML = "ROS Bridge Status: CLOSE";
-        console.log('Connection to websocket server closed.');
-    });
-
-    // Subscribing to a Topic
-    // ----------------------
-
-    var listener = new ROSLIB.Topic({
-        ros : ros,
-        //topic name
-        name : '/listener',
-        messageType : 'std_msgs/String'
-    });
-
-    listener.subscribe(function(message) {
-        console.log('Received message on ' + listener.name + ': ' + message.data);
-        var element = document.getElementById("dstatus");
-        if(message.data == "finish"){
-            console.log("123");
-            element.innerHTML= "Delivery status: " + message.data;
-            document.getElementById("button-wn-show-preset").click();
-        }
-        else{
-            console.log("456");
-            element.innerHTML= "Delivery status: Not finish" ;
-        }
-        listener.unsubscribe();
-    });
-
-    var moveClient = new ROSLIB.ActionClient({
-        ros: ros,
-        serverName : '/move_base',
-        actionName : 'MoveBaseActionGoal'
-    });
-
-    var goal = new ROSLIB.Goal({
-        actionClient : moveClient,
-        goalMessage : {
-            target_pose:{
-                header: {
-                    frame_id : 'map'               
-                },
-                pose: {
-                        position:{
-                            x: 2.9,
-                            y: 1.9,
-                            z: 0.0
-                        },
-                        orientation:{
-                            x : 0.0,
-                            y : 0.0,
-                            z : 0.046,
-                            w : 0.998
-                        }
-                }
-            }
-        }
-    });
- goal.on('feedback', function(feedback) {
-    console.log('Feedback: ' + feedback.sequence);
-    });
-
-  goal.on('result', function(result) {
-    console.log('Final Result: ' + result.sequence);
-  });
-
-    
-</script>--}}
-
-
-
-
 <script type="text/javascript">
    /**
    * Setup all visualization elements when the page is loaded. 
@@ -286,9 +196,9 @@
             <div id="map"></div>
       </div>
       <div class="col-md-5">
-          <h3>ROS Bridge Status: </h3>
+          <h3>ROS Bridge Status:</h3>
           <hr>
-          <p id=status></p>
+          <p id=status>ROS Bridge status: Not checked</p>
           {{!--<h3>Robot Status</h3>
           <hr>
           <p id=rstatus>Robot Status: </p>--}}
